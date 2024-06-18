@@ -6,7 +6,6 @@ import { DollarSign, Users, CreditCard, Activity } from "lucide-react";
 import Card, { CardContent, CardProps } from "@/components/Card";
 import BarChart from "@/components/BarChart";
 import SalesCard, { SalesProps } from "@/components/SalesCard";
-import jwt_decode from "jwt-decode";
 
 import Navbar from "@/components/Navbar";
 
@@ -66,15 +65,6 @@ const uesrSalesData: SalesProps[] = [
 ];
 
 export default function Home() {
-  // useEffect(() => {
-  //   const token = "eyJhbGciOi..."; // Replace with your JWT
-  //   try {
-  //     const decoded = jwt_decode(token);
-  //     console.log(decoded); // Decoded payload
-  //   } catch (error) {
-  //     console.error("Invalid token:", error);
-  //   }
-  // }, []);
   return (
     <div className="flex flex-col gap-5  w-full">
       <Navbar />
