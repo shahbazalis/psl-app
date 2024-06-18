@@ -1,4 +1,11 @@
 ("user-server");
+type UpdatePlayerParams = {
+  id: string;
+  status?: string;
+  teamId?: string;
+  name?: string;
+  nationality?: string;
+};
 
 export const PlayersList = async () => {
   try {
@@ -37,14 +44,18 @@ export const DeletePlayer = async (id: string) => {
   }
 };
 
-export const UpdatePlayer = async (id: string, status: string) => {
+export const UpdatePlayer = async (
+  id: string,
+  status?: string,
+  teamId?: string
+) => {
   try {
     const response = await fetch(`http://localhost:3001/players/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({status})
+      body: JSON.stringify({ status, teamId }),
     });
 
     if (!response.ok) {
@@ -56,4 +67,3 @@ export const UpdatePlayer = async (id: string, status: string) => {
     return error;
   }
 };
-

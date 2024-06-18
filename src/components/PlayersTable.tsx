@@ -22,6 +22,15 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -48,6 +57,7 @@ export default function PlayersTable({ players }: { players: Player[] }) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [teams, setTeams] = useState<Team[]>([]);
+  const [teamName, setTeamName] = useState("");
   useEffect(() => {
     const getListofPlayers = async () => {
       const players = await TeamsList();
@@ -161,29 +171,78 @@ export default function PlayersTable({ players }: { players: Player[] }) {
       accessorKey: "teamId",
       header: "Team",
       cell: ({ row }) => {
-        const status: string = row.getValue("teamId");
+        const teamId: string = row.original.teamId;
+        const findTeam: Team | undefined = teams.find((team) => {
+          if (teamId === team.id) return team;
+        });
+        console.log("Team findersdsd:", row.original.id);
 
-        const handleStatusChange = (event: { target: { value: string } }) => {
-          const newStatus = event.target.value;
-          UpdatePlayer(row.original.id, newStatus);
+        const handleStatusChange = (value: string) => {
+          setTeamName(value);
+          // console.log("row:", row);
+          // console.log("Team:", value);
+          // const newTeam = value;
+          if (row.getIsSelected()) {
+            UpdatePlayer(row.original.id, row.original.status, teamId);
+          }
         };
 
         return (
-          <select
-            value={status}
-            onChange={handleStatusChange}
+          <Select
+            onValueChange={handleStatusChange}
+            value={teamName}
+            defaultValue={findTeam ? findTeam.name : "No Team"}
             disabled={!row.getIsSelected()}
-            className="capitalize border rounded px-2 py-1"
           >
-            {teams.map((team: Team) => (
-              <option key={team.id} value={team.name}>
-                {team.name}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Select a Team" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Teams</SelectLabel>
+                {teams.map((team: Team) => (
+                  <SelectItem value={team.name} key={team.id}>
+                    {team.name === "Default Team" ? "No Team" : team.name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         );
+
+        // <Select
+        //   onValueChange={handleStatusChange}
+        //   value={teamId.toString()}
+        //   defaultValue={teamId.toString()}
+        //   disabled={!row.getIsSelected()}
+        // >
+        //   <SelectTrigger className="w-[180px]">
+        //     <SelectValue placeholder="Select" />
+        //   </SelectTrigger>
+        //   <SelectContent position="popper">
+        //     {teams.map((team: Team) => (
+        //       <SelectItem value={team.name} key={team.id} >
+        //         {team.name === "Default Team" ? "No Team" : team.name}
+        //       </SelectItem>
+        //     ))}
+        //   </SelectContent>
+        // </Select>
+        // <select
+        //   value={teamId}
+        //   onChange={handleStatusChange}
+        //   disabled={!row.getIsSelected()}
+        //   className="capitalize border rounded px-2 py-1"
+        // >
+        //   {teams.map((team: Team) => (
+        //     <option style={{marginBottom : '5px'}} key={team.id} value={team.name}>
+        //       {
+        //         team.name === "Default Team" ? "No Team" : team.name
+        //       }
+
+        //     </option>
+        //   ))}
+        // </select>
       },
-      //<div>{row.getValue("teamId")}</div>,
     },
     {
       accessorKey: "actions",

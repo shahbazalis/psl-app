@@ -8,6 +8,7 @@ import { PlayersList } from "../server-actions/players-actions";
 import Navbar from "@/components/Navbar";
 
 export type Player = {
+  teamId: string;
   id: string;
   name: string;
   email: string;
