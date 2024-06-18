@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -13,17 +13,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
-
+import { ArrowUpDown, ChevronDown, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -35,56 +31,33 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-];
-
-export type Payment = {
+import { Player } from "@/app/players/page";
+import {
+  DeletePlayer,
+  UpdatePlayer,
+} from "@/app/server-actions/players-actions";
+import { TeamsList, Team } from "@/app/server-actions/teams-actions";
+export type Team = {
   id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
+  name: string;
 };
 
-
-
-export default function DataTable() {
+export default function PlayersTable({ players }: { players: Player[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [teams, setTeams] = useState<Team[]>([]);
+  useEffect(() => {
+    const getListofPlayers = async () => {
+      const players = await TeamsList();
+      setTeams(players);
+    };
 
-  const columns: ColumnDef<Payment>[] = [
+    getListofPlayers();
+  }, []);
+
+  const columns: ColumnDef<Player>[] = [
     {
       id: "select",
       header: ({ table }) => (
@@ -110,9 +83,26 @@ export default function DataTable() {
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("status")}</div>
-      ),
+      cell: ({ row }) => {
+        const status: string = row.getValue("status");
+
+        const handleStatusChange = (event: { target: { value: string } }) => {
+          const newStatus = event.target.value;
+          UpdatePlayer(row.original.id, newStatus);
+        };
+
+        return (
+          <select
+            value={status}
+            onChange={handleStatusChange}
+            disabled={!row.getIsSelected()}
+            className="capitalize border rounded px-2 py-1"
+          >
+            <option value="SOLD">SOLD</option>
+            <option value="UNSOLD">UNSOLD</option>
+          </select>
+        );
+      },
     },
     {
       accessorKey: "email",
@@ -127,56 +117,97 @@ export default function DataTable() {
           </Button>
         );
       },
-      cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("email")}</div>
+      ),
     },
     {
-      accessorKey: "amount",
-      header: () => <div className="text-right">Amount</div>,
-      cell: ({ row }) => {
-        const amount = parseFloat(row.getValue("amount"));
-  
-        // Format the amount as a dollar amount
-        const formatted = new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
-        }).format(amount);
-  
-        return <div className="text-right font-medium">{formatted}</div>;
-      },
-    },
-    {
-      id: "actions",
-      enableHiding: false,
-      cell: ({ row }) => {
-        const payment = row.original;
-  
+      accessorKey: "name",
+      header: ({ column }) => {
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.id)}
-              >
-                Copy payment ID
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>View customer</DropdownMenuItem>
-              <DropdownMenuItem>View payment details</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Name
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("name")}</div>
+      ),
+    },
+    {
+      accessorKey: "role",
+      header: "Role",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("role")}</div>
+      ),
+    },
+    {
+      accessorKey: "nationality",
+      header: "Nationality",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("nationality")}</div>
+      ),
+    },
+    {
+      accessorKey: "phoneNumber",
+      header: "Phone Number",
+      cell: ({ row }) => <div>{row.getValue("phoneNumber")}</div>,
+    },
+    {
+      accessorKey: "teamId",
+      header: "Team",
+      cell: ({ row }) => {
+        const status: string = row.getValue("teamId");
+
+        const handleStatusChange = (event: { target: { value: string } }) => {
+          const newStatus = event.target.value;
+          UpdatePlayer(row.original.id, newStatus);
+        };
+
+        return (
+          <select
+            value={status}
+            onChange={handleStatusChange}
+            disabled={!row.getIsSelected()}
+            className="capitalize border rounded px-2 py-1"
+          >
+            {teams.map((team: Team) => (
+              <option key={team.id} value={team.name}>
+                {team.name}
+              </option>
+            ))}
+          </select>
+        );
+      },
+      //<div>{row.getValue("teamId")}</div>,
+    },
+    {
+      accessorKey: "actions",
+      header: "Actions",
+      enableHiding: true,
+      cell: ({ row }) => {
+        const player = row.original;
+
+        return (
+          <Button
+            variant="ghost"
+            className="flex items-center space-x-2"
+            onClick={() => DeletePlayer(player.id)}
+            disabled={!row.getIsSelected()}
+          >
+            <Trash2 className="h-6 w-6 text-red-700" />
+          </Button>
         );
       },
     },
   ];
 
   const table = useReactTable({
-    data,
+    data: players,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
