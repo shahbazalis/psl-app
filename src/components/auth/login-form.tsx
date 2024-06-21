@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { setLocalStorage } from "../../lib/local-storage";
 import { AlertMessage } from "../Alert";
 import { LoginAction } from "@/app/server-actions/login-action";
+import { z } from "zod";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
@@ -36,18 +37,17 @@ const LoginForm = () => {
     },
   });
 
-  const onSubmit = async (formData: FormData) => {
-    const response = await LoginAction(formData);
-    const result = await response.json();
-    if (result.token) {
+  const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
+    const response = await LoginAction(data);
+    if (response.token) {
       setLoading(true);
       setIsLoggedIn(true);
-      setAccessToken(result.token);
+      setAccessToken(response.token);
       setLocalStorage("isLoggedIn", isLoggedIn);
       setLocalStorage("accessToken", accessToken);
       router.push("/dashboard");
     } else {
-      setErrorMessage(result.message);
+      setErrorMessage(response.message);
       setLoading(false);
     }
   };
@@ -61,7 +61,7 @@ const LoginForm = () => {
       backButtonLabel="Don't have an account? Register here."
     >
       <Form {...form}>
-        <form action={onSubmit} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
             <FormField
               control={form.control}

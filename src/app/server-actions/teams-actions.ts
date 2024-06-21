@@ -1,8 +1,8 @@
 ("user-server");
-
+const baseURL = "http://localhost:3001/teams"
 export const TeamsList = async () => {
   try {
-    const response = await fetch("http://localhost:3001/teams", {
+    const response = await fetch(`${baseURL}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +21,7 @@ export const TeamsList = async () => {
 
 export const Team = async (id: string) => {
   try {
-    const response = await fetch(`http://localhost:3001/teams/${id}`, {
+    const response = await fetch(`${baseURL}/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -42,8 +42,8 @@ import {
 } from "@/components/ui/table";
 import { Player } from "@/app/players/page";
 import {
-  UpdatePlayer,
   DeletePlayer,
+  UpdatePlayer,
 } from "@/app/server-actions/players-actions";
 import { TeamsList, Team } from "@/app/server-actions/teams-actions";
 export type Team = {
@@ -51,55 +51,13 @@ export type Team = {
   name: string;
 };
 
-type PlayersTableProps = {
-  players: Player[];
-};
-
-export default function PlayersTable({
-  players: initialPlayers,
-}: PlayersTableProps) {
-  const [players, setPlayers] = useState<Player[]>([]);
+export default function TeamsTable({ teams}: { teams: Team[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [teams, setTeams] = useState<Team[]>([]);
 
-  useEffect(() => {
-    setPlayers(initialPlayers);
-  }, [initialPlayers]);
-
-  useEffect(() => {
-    const fetchTeams = async () => {
-      const fetchedTeams = await TeamsList();
-      setTeams(fetchedTeams);
-    };
-
-    fetchTeams();
-  }, []);
-
-  const handleTeamChange = async (playerId: string, newTeamId: string) => {
-    const selectedTeam = teams.find((team) => team.id === newTeamId);
-    const newStatus = selectedTeam?.name === "Default Team" ? "UNSOLD" : "SOLD";
-
-    await UpdatePlayer(playerId, newStatus, newTeamId);
-
-    setPlayers((prevPlayers) =>
-      prevPlayers.map((player) =>
-        player.id === playerId
-          ? { ...player, status: newStatus, teamId: newTeamId }
-          : player
-      )
-    );
-  };
-  const handleDeletePlayer = async (playerId: string) => {
-    if (window.confirm("Are you sure you want to delete this player?")) {
-      await DeletePlayer(playerId);
-      setPlayers(players.filter((player) => player.id !== playerId));
-    }
-  };
-
-  const columns: ColumnDef<Player>[] = [
+  const columns: ColumnDef<Team>[] = [
     {
       id: "select",
       header: ({ table }) => (
@@ -123,30 +81,6 @@ export default function PlayersTable({
       enableHiding: false,
     },
     {
-      accessorKey: "status",
-      header: "Status",
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("status")}</div>
-      ),
-    },
-    {
-      accessorKey: "email",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Email
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("email")}</div>
-      ),
-    },
-    {
       accessorKey: "name",
       header: ({ column }) => {
         return (
@@ -164,56 +98,6 @@ export default function PlayersTable({
       ),
     },
     {
-      accessorKey: "role",
-      header: "Role",
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("role")}</div>
-      ),
-    },
-    {
-      accessorKey: "nationality",
-      header: "Nationality",
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("nationality")}</div>
-      ),
-    },
-    {
-      accessorKey: "phoneNumber",
-      header: "Phone Number",
-      cell: ({ row }) => <div>{row.getValue("phoneNumber")}</div>,
-    },
-    {
-      accessorKey: "teamId",
-      header: "Team",
-      cell: ({ row }) => {
-        const teamId: string = row.original.teamId;
-
-        return (
-          <Select
-            onValueChange={(newTeamId) =>
-              handleTeamChange(row.original.id, newTeamId)
-            }
-            value={teamId}
-            disabled={!row.getIsSelected()}
-          >
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Select a Team" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Teams</SelectLabel>
-                {teams.map((team: Team) => (
-                  <SelectItem key={team.id} value={team.id}>
-                    {team.name === "Default Team" ? "No Team" : team.name}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        );
-      },
-    },
-    {
       accessorKey: "actions",
       header: "Actions",
       enableHiding: true,
@@ -224,7 +108,7 @@ export default function PlayersTable({
           <Button
             variant="ghost"
             className="flex items-center space-x-2"
-            onClick={() => handleDeletePlayer(player.id)}
+            onClick={() => DeletePlayer(player.id)}
             disabled={!row.getIsSelected()}
           >
             <Trash2 className="h-6 w-6 text-red-700" />
@@ -235,7 +119,7 @@ export default function PlayersTable({
   ];
 
   const table = useReactTable({
-    data: players,
+    data: teams,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -257,10 +141,10 @@ export default function PlayersTable({
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter names..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

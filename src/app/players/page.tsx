@@ -3,7 +3,7 @@
 import PageTitle from "@/components/PageTitle";
 import PlayersTable from "@/components/PlayersTable";
 import { useState, useEffect } from "react";
-import { PlayersList } from "../server-actions/players-actions";
+import { PlayersList, DeletePlayer} from "../server-actions/players-actions";
 
 import Navbar from "@/components/Navbar";
 
@@ -16,6 +16,9 @@ export type Player = {
   phoneNumber: string;
   nationality: string;
   status: "SOLD" | "UNSOLD";
+  team: { name: string }; 
+  password?: string;
+  cconfirmPassword?: string;
 };
 
 export default function Players() {
@@ -29,6 +32,7 @@ export default function Players() {
 
     getListofPlayers();
   }, []);
+
 
   return (
     <>

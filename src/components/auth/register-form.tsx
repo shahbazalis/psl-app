@@ -22,9 +22,10 @@ import { useForm } from "react-hook-form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useFormStatus } from "react-dom";
+import { z } from "zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { RegisterAction } from "@/app/server-actions/register-action";
+import { PlayerRegistration } from "@/app/server-actions/players-actions";
 import { AlertMessage } from "../Alert";
 
 const RegisterForm = () => {
@@ -44,19 +45,14 @@ const RegisterForm = () => {
     },
   });
 
-  const onSubmit = async (formData: FormData) => {
-    const response = await RegisterAction(formData);
-    if (!response.ok) {
-      setErrorMessage(response.statusText);
+  const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
+    const response = await PlayerRegistration(data);
+    if (response.email) {
+      setLoading(true);
+      router.push("/auth/login");
     } else {
-      const result = await response.json();
-      if (result.email) {
-        setLoading(true);
-        router.push("/auth/login");
-      } else {
-        setErrorMessage(result.message);
-        setLoading(false);
-      }
+      setErrorMessage(response.message);
+      setLoading(false);
     }
   };
 
@@ -69,7 +65,7 @@ const RegisterForm = () => {
       backButtonLabel="Already have an account? Login here."
     >
       <Form {...form}>
-        <form action={onSubmit} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
             <FormField
               control={form.control}
@@ -138,6 +134,7 @@ const RegisterForm = () => {
                       <Select
                         {...field}
                         onValueChange={(value) => {
+                          console.log("Field:", field);
                           field.onChange(value);
                         }}
                         value={field.value}

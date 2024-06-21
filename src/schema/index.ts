@@ -1,6 +1,7 @@
 import * as z from "zod";
 import validator from "validator";
 
+
 export const RegisterSchema = z
   .object({
     email: z.string().email({

@@ -2,7 +2,6 @@
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "../globals.css";
 import { cn } from "../../lib/utils";
 import SideNavbar from "@/components/SideNavbar";
 //import Navbar from "@/components/Navbar";
