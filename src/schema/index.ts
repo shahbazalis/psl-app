@@ -44,3 +44,10 @@ export const LoginSchema = z.object({
     message: "Password must be at least 6 characters long",
   }),
 });
+
+export const AddTeamSchema = z.object({
+  name: z.string().min(1, {
+    message: "Please enter the name for team",
+  }),
+});
+

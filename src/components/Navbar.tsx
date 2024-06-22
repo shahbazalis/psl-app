@@ -1,16 +1,15 @@
-
-"use client"
+"use client";
 import Link from "next/link";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { Button } from "./ui/button";
 import { LogOut } from "lucide-react";
-import { removeLocalStorage } from "../lib/local-storage";
 import { useRouter } from "next/navigation";
+import { deleteAccessToken } from "@/lib/cookies";
 
-const Navbar =  () => {
+const Navbar = () => {
   const router = useRouter();
   const handleRemove = () => {
-    removeLocalStorage("isLoggedIn");
+    deleteAccessToken();
     router.push("/auth/login");
   };
   return (

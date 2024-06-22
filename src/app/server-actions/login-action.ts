@@ -1,4 +1,4 @@
-("user-server");
+"use server";
 
 export type LoginProps = {
   email: string;

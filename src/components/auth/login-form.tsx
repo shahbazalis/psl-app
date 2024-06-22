@@ -17,15 +17,13 @@ import { Button } from "../ui/button";
 import { useFormStatus } from "react-dom";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { setLocalStorage } from "../../lib/local-storage";
 import { AlertMessage } from "../Alert";
 import { LoginAction } from "@/app/server-actions/login-action";
 import { z } from "zod";
+import { setAccessToken } from "@/lib/cookies";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [accessToken, setAccessToken] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
@@ -41,10 +39,7 @@ const LoginForm = () => {
     const response = await LoginAction(data);
     if (response.token) {
       setLoading(true);
-      setIsLoggedIn(true);
       setAccessToken(response.token);
-      setLocalStorage("isLoggedIn", isLoggedIn);
-      setLocalStorage("accessToken", accessToken);
       router.push("/dashboard");
     } else {
       setErrorMessage(response.message);

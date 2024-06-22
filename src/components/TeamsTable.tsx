@@ -22,15 +22,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -40,22 +31,35 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Player } from "@/app/players/page";
-import {
-  DeletePlayer,
-  UpdatePlayer,
-} from "@/app/server-actions/players-actions";
-import { TeamsList, Team } from "@/app/server-actions/teams-actions";
+import { DeleteTeam } from "@/app/server-actions/teams-actions";
+import { Team } from "@/app/server-actions/teams-actions";
+
 export type Team = {
   id: string;
   name: string;
 };
+export type TeamsTableProps = {
+  teams: Team[];
+};
 
-export default function TeamsTable({ teams}: { teams: Team[] }) {
+export default function TeamsTable({ teams: initialTeams }: TeamsTableProps) {
+  //console.log("Initial Team:",initialTeams);
+  const [teams, setTeams] = useState<Team[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+
+  useEffect(() => {
+    setTeams(initialTeams);
+  }, [initialTeams]);
+
+  const handleDeleteTeam= async (teamId: string) => {
+    if (window.confirm("Are you sure you want to delete this team?")) {
+      await DeleteTeam(teamId);
+      setTeams(teams.filter((team) => team.id !== teamId));
+    }
+  };
 
   const columns: ColumnDef<Team>[] = [
     {
@@ -70,13 +74,15 @@ export default function TeamsTable({ teams}: { teams: Team[] }) {
           aria-label="Select all"
         />
       ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
+      cell: ({ row }) => {
+        return (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+          />
+        );
+      },
       enableSorting: false,
       enableHiding: false,
     },
@@ -102,14 +108,16 @@ export default function TeamsTable({ teams}: { teams: Team[] }) {
       header: "Actions",
       enableHiding: true,
       cell: ({ row }) => {
-        const player = row.original;
+        const selectedTeam = row.original;
 
         return (
           <Button
             variant="ghost"
             className="flex items-center space-x-2"
-            onClick={() => DeletePlayer(player.id)}
-            disabled={!row.getIsSelected()}
+            onClick={() => handleDeleteTeam(selectedTeam.id)}
+            disabled={
+              !row.getIsSelected() || selectedTeam.name === "Default Team"
+            }
           >
             <Trash2 className="h-6 w-6 text-red-700" />
           </Button>
