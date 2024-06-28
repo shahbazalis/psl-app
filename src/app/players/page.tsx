@@ -1,7 +1,7 @@
 "use client";
 
 import PageTitle from "@/components/PageTitle";
-import PlayersTable from "@/components/PlayersTable";
+import PlayersTable from "@/components/players/PlayersTable";
 import { useState, useEffect, Suspense, useMemo } from "react";
 import { PlayersList } from "../server-actions/players-actions";
 

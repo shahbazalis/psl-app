@@ -4,12 +4,12 @@ import MaxWidthWrapper from "./MaxWidthWrapper";
 import { Button } from "./ui/button";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { deleteAccessToken } from "@/lib/cookies";
+import { deleteCookie} from "@/lib/cookies";
 
 const Navbar = () => {
   const router = useRouter();
   const handleRemove = () => {
-    deleteAccessToken();
+    deleteCookie("accessToken");
     router.push("/auth/login");
   };
   return (

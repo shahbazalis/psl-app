@@ -1,9 +1,9 @@
 "use client";
 import PageTitle from "@/components/PageTitle";
-import AddTeam from "@/components/AddTeam";
+import AddTeam from "@/components/admins/AddTeam";
 import { useState, useEffect, Suspense, useMemo } from "react";
 import { TeamsList, Team } from "@/app/server-actions/teams-actions";
-import TeamsTable from "@/components/TeamsTable";
+import TeamsTable from "@/components/teams/TeamsTable";
 export type Team = {
   id: string;
   name: string;

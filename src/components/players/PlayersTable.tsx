@@ -13,9 +13,10 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, Trash2 } from "lucide-react";
+import { ArrowUpDown, ChevronDown, UserRoundX, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { AddAdmin } from "@/app/server-actions/admins-actions";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -96,6 +97,13 @@ export default function PlayersTable({
     if (window.confirm("Are you sure you want to delete this player?")) {
       await DeletePlayer(playerId);
       setPlayers(players.filter((player) => player.id !== playerId));
+    }
+  };
+
+  const handleAddAdmin = async (playerId: string) => {
+    if (window.confirm("Are you sure you want to add this player as admin?")) {
+      await AddAdmin(playerId);
+      //setPlayers(players.filter((player) => player.id !== playerId));
     }
   };
 
@@ -221,14 +229,28 @@ export default function PlayersTable({
         const player = row.original;
 
         return (
-          <Button
-            variant="ghost"
-            className="flex items-center space-x-2"
-            onClick={() => handleDeletePlayer(player.id)}
-            disabled={!row.getIsSelected()}
-          >
-            <Trash2 className="h-6 w-6 text-red-700" />
-          </Button>
+          <div className="flex flex-row">
+            <div>
+              <Button
+                variant="ghost"
+                className="flex items-center space-x-2"
+                onClick={() => handleDeletePlayer(player.id)}
+                disabled={!row.getIsSelected()}
+              >
+                <UserRoundX className="h-5 w-5 text-red-700" />
+              </Button>
+            </div>
+            <div>
+              <Button
+                variant="ghost"
+                className="flex items-center space-x-2"
+                onClick={() => handleAddAdmin(player.id)}
+                disabled={!row.getIsSelected()}
+              >
+                <UserPlus className="h-5 w-5 text-blue-700" />
+              </Button>
+            </div>
+          </div>
         );
       },
     },

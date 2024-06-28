@@ -1,18 +1,18 @@
 "use server";
 import { cookies } from "next/headers";
 
-export const getAccessToken = async () => {
-  const accessToken = cookies().get("accessToken");
-  return accessToken?.value || "";
+export const getCookie = async (cookieName: string) => {
+  const cookie = cookies().get(cookieName);
+  return cookie?.value || "";
 };
-export const setAccessToken = async (token: string) => {
-  cookies().set("accessToken", token, {
+export const setCookie = async (cookieName: string, value: string) => {
+  cookies().set("cookieName", value, {
     httpOnly: true,
     maxAge: 24 * 60 * 60,
     sameSite: "strict",
   });
 };
 
-export const deleteAccessToken = async () => {
-  cookies().delete("accessToken");
+export const deleteCookie = async (cookieName: string) => {
+  cookies().delete(cookieName);
 };

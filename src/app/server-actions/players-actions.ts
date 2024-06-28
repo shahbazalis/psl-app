@@ -1,7 +1,7 @@
 "use server";
 import { Player } from "../players/page";
 const baseURL = "http://localhost:3001/players";
-import { getAccessToken } from "@/lib/cookies";
+import { getCookie } from "@/lib/cookies";
 export const PlayerRegistration = async (props: Partial<Player>) => {
   const email = props.email;
   const name = props.name;
@@ -11,7 +11,7 @@ export const PlayerRegistration = async (props: Partial<Player>) => {
   const password = props.password;
 
   try {
-    const accessToken = await getAccessToken();
+    const accessToken = await getCookie("accessToken");
     const response = await fetch(`${baseURL}/register`, {
       method: "POST",
       headers: {
@@ -35,7 +35,7 @@ export const PlayerRegistration = async (props: Partial<Player>) => {
 };
 export const PlayersList = async () => {
   try {
-    const accessToken = await getAccessToken();
+    const accessToken = await getCookie("accessToken");
     const response = await fetch(`${baseURL}`, {
       method: "GET",
       headers: {
@@ -51,7 +51,7 @@ export const PlayersList = async () => {
 };
 export const DeletePlayer = async (id: string) => {
   try {
-    const accessToken = await getAccessToken();
+    const accessToken = await getCookie("accessToken");
     const response = await fetch(`${baseURL}/${id}`, {
       method: "DELETE",
       headers: {
@@ -72,7 +72,7 @@ export const UpdatePlayer = async (
   teamId?: string
 ) => {
   try {
-    const accessToken = await getAccessToken();
+    const accessToken = await getCookie("accessToken");
     const response = await fetch(`${baseURL}/${id}`, {
       method: "PATCH",
       headers: {

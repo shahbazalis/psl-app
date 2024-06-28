@@ -13,22 +13,17 @@ import {
   ChevronRight
 } from "lucide-react";
 import { Button } from "./ui/button";
-import { getLocalStorage} from "../lib/local-storage";
 import { useWindowWidth } from "@react-hook/window-size";
 
 export default function SideNavbar({}: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const onlyWidth = useWindowWidth();
   const mobileWidth = onlyWidth < 768;
 
   useEffect(() => {
     setHasMounted(true);
-    // const storedValue = getLocalStorage("isLoggedIn", true);
-    // console.log("storedValue:", storedValue);
-    // setIsLoggedIn(storedValue);
   }, []);
 
   function toggleSidebar() {
@@ -63,6 +58,12 @@ export default function SideNavbar({}: Props) {
             href: "/dashboard",
             icon: LayoutDashboard,
             variant: "default",
+          },
+          {
+            title: "Admins",
+            href: "/admins",
+            icon: Users,
+            variant: "ghost",
           },
           {
             title: "Players",

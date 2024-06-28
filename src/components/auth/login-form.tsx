@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 import { AlertMessage } from "../Alert";
 import { LoginAction } from "@/app/server-actions/login-action";
 import { z } from "zod";
-import { setAccessToken } from "@/lib/cookies";
+import { setCookie } from "@/lib/cookies";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
@@ -37,9 +37,10 @@ const LoginForm = () => {
 
   const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
     const response = await LoginAction(data);
+    console.log("Response:", response);
     if (response.token) {
       setLoading(true);
-      setAccessToken(response.token);
+      setCookie("accessToken", response.token);
       router.push("/dashboard");
     } else {
       setErrorMessage(response.message);
