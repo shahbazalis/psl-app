@@ -37,7 +37,6 @@ const LoginForm = () => {
 
   const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
     const response = await LoginAction(data);
-    console.log("Response:", response);
     if (response.token) {
       setLoading(true);
       setCookie("accessToken", response.token);

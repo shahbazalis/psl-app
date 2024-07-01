@@ -1,19 +1,19 @@
-/** @format */
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cn } from "../../lib/utils";
 import SideNavbar from "@/components/SideNavbar";
+import Navbar from "@/components/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "PSL-Players",
-  description: "Players feature created to get and add the information about players."
+  description:
+    "Players feature created to get and add the information about players.",
 };
 
 export default function PlayersLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {
@@ -26,7 +26,12 @@ export default function PlayersLayout({
         )}
       >
         <SideNavbar />
-        <div className="p-8 w-full">{children}</div>
+        <div className="flex flex-col w-full">
+          <Navbar />
+          <div className="p-8 w-full">{children}</div>
+        </div>
+        {/* <Navbar />
+        <div className="p-8 w-full">{children}</div> */}
       </body>
     </html>
   );

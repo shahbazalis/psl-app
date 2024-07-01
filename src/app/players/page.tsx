@@ -40,7 +40,6 @@ export default function Players() {
 
   return (
     <>
-      <Navbar />
       <PageTitle title="Players" />
       <Suspense fallback={<p>Loading Players...</p>}>
         {memoizedPlayersTable}

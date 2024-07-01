@@ -4,7 +4,6 @@ import { getCookie } from "@/lib/cookies";
 export const TeamsList = async () => {
   try {
     const accessToken = await getCookie("accessToken");
-    console.log("access Token:",accessToken);
     const response = await fetch(`${baseURL}`, {
       method: "GET",
       headers: {

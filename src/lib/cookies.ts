@@ -6,7 +6,7 @@ export const getCookie = async (cookieName: string) => {
   return cookie?.value || "";
 };
 export const setCookie = async (cookieName: string, value: string) => {
-  cookies().set("cookieName", value, {
+  cookies().set(cookieName, value, {
     httpOnly: true,
     maxAge: 24 * 60 * 60,
     sameSite: "strict",
