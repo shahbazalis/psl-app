@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext,useContext } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -13,7 +13,14 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, UserRoundX, UserPlus } from "lucide-react";
+import {
+  ArrowUpDown,
+  ChevronDown,
+  UserRoundX,
+  UserPlus,
+  BookUser,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { AddAdmin } from "@/app/server-actions/admins-actions";
@@ -47,6 +54,7 @@ import {
   DeletePlayer,
 } from "@/app/server-actions/players-actions";
 import { TeamsList, Team } from "@/app/server-actions/teams-actions";
+import { setCookie } from "@/lib/cookies";
 export type Team = {
   id: string;
   name: string;
@@ -65,6 +73,7 @@ export default function PlayersTable({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [teams, setTeams] = useState<Team[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     setPlayers(initialPlayers);
@@ -74,6 +83,7 @@ export default function PlayersTable({
     const fetchTeams = async () => {
       const fetchedTeams = await TeamsList();
       setTeams(fetchedTeams);
+      await setCookie("teams",JSON.stringify(fetchedTeams));
     };
 
     fetchTeams();
@@ -103,8 +113,12 @@ export default function PlayersTable({
   const handleAddAdmin = async (playerId: string) => {
     if (window.confirm("Are you sure you want to add this player as admin?")) {
       await AddAdmin(playerId);
-      //setPlayers(players.filter((player) => player.id !== playerId));
     }
+  };
+
+  const handlePlayerDetails = async (player: Player) => {
+     await setCookie("player", JSON.stringify(player));
+    router.push("/players/player");
   };
 
   const columns: ColumnDef<Player>[] = [
@@ -248,6 +262,15 @@ export default function PlayersTable({
                 disabled={!row.getIsSelected()}
               >
                 <UserPlus className="h-5 w-5 text-blue-700" />
+              </Button>
+            </div>
+            <div>
+              <Button
+                variant="ghost"
+                className="flex items-center space-x-2"
+                onClick={() => handlePlayerDetails(player)}
+              >
+                <BookUser  className="h-5 w-5 text-blue-700" />
               </Button>
             </div>
           </div>

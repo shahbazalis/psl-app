@@ -39,7 +39,7 @@ const LoginForm = () => {
     const response = await LoginAction(data);
     if (response.token) {
       setLoading(true);
-      setCookie("accessToken", response.token);
+      await setCookie("accessToken", response.token);
       router.push("/dashboard");
     } else {
       setErrorMessage(response.message);

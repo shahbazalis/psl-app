@@ -1,15 +1,14 @@
 "use client";
 import PageTitle from "@/components/PageTitle";
-import AddTeam from "@/components/admins/AddTeam";
+import AddTeam from "@/components/teams/add-team";
 import { useState, useEffect, Suspense, useMemo } from "react";
 import { TeamsList, Team } from "@/app/server-actions/teams-actions";
-import TeamsTable from "@/components/teams/TeamsTable";
+import TeamsTable from "@/components/teams/teams-table";
 export type Team = {
   id: string;
   name: string;
 };
 
-import Navbar from "@/components/Navbar";
 
 export default function Teams() {
   const [teams, setTeams] = useState<Team[]>([]);

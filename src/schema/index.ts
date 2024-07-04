@@ -1,7 +1,6 @@
 import * as z from "zod";
 import validator from "validator";
 
-
 export const RegisterSchema = z
   .object({
     email: z.string().email({
@@ -23,7 +22,9 @@ export const RegisterSchema = z
     nationality: z.string().min(3, {
       message: "Please enter your nationality",
     }),
-    role: z.enum(["BATTER", "BOWLER", "ALLROUNDER"],{ message:"Role is required"}),
+    role: z.enum(["BATTER", "BOWLER", "ALLROUNDER"], {
+      message: "Role is required",
+    }),
     password: z.string().min(6, {
       message: "Password must be at least 6 characters long",
     }),
@@ -51,3 +52,12 @@ export const AddTeamSchema = z.object({
   }),
 });
 
+export const BidPlayerSchema = z.object({
+  value: z
+    .number()
+    .int()
+    .min(2, { message: "Please fill out this field with two digits" }),
+  team: z.string().min(1, {
+    message: "Please select the team",
+  }),
+});

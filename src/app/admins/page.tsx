@@ -5,7 +5,7 @@ import { useState, useEffect, Suspense, useMemo } from "react";
 import { AdminsList } from "../server-actions/admins-actions";
 
 import { Player } from "../players/page";
-import AdminsTable from "@/components/admins/AdminsTable";
+import AdminsTable from "@/components/admins/admins-table";
 
 export default function Admins() {
   const [admins, setAdmins] = useState<Player[]>([]);

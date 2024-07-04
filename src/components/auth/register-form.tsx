@@ -134,7 +134,6 @@ const RegisterForm = () => {
                       <Select
                         {...field}
                         onValueChange={(value) => {
-                          console.log("Field:", field);
                           field.onChange(value);
                         }}
                         value={field.value}
