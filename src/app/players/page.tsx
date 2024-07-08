@@ -1,11 +1,9 @@
 "use client";
 
 import PageTitle from "@/components/PageTitle";
-import PlayersTable from "@/components/PlayersTable";
-import { useState, useEffect } from "react";
+import PlayersTable from "@/components/players/players-table";
+import { useState, useEffect, Suspense, useMemo } from "react";
 import { PlayersList } from "../server-actions/players-actions";
-
-import Navbar from "@/components/Navbar";
 
 export type Player = {
   teamId: string;
@@ -16,6 +14,9 @@ export type Player = {
   phoneNumber: string;
   nationality: string;
   status: "SOLD" | "UNSOLD";
+  team: { name: string };
+  password?: string;
+  confirmPassword?: string;
 };
 
 export default function Players() {
@@ -24,17 +25,26 @@ export default function Players() {
   useEffect(() => {
     const getListofPlayers = async () => {
       const players = await PlayersList();
-      setPlayers(players);
+      setPlayers(
+        players.filter((player: { name: string }) => player.name !== "Alis")
+      );
+      //setPlayers(players);
     };
 
     getListofPlayers();
   }, []);
 
+  const memoizedPlayersTable = useMemo(
+    () => <PlayersTable players={players} />,
+    [players]
+  );
+
   return (
     <>
-      <Navbar />
       <PageTitle title="Players" />
-      <PlayersTable players={players} />
+      <Suspense fallback={<p>Loading Players...</p>}>
+        {memoizedPlayersTable}
+      </Suspense>
     </>
   );
 }

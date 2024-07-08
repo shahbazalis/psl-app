@@ -17,16 +17,17 @@ import { Button } from "../ui/button";
 import { useFormStatus } from "react-dom";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { setLocalStorage } from "../../lib/local-storage";
 import { AlertMessage } from "../Alert";
 import { LoginAction } from "@/app/server-actions/login-action";
+import { z } from "zod";
+import { setCookie } from "@/lib/cookies";
+import { AlertDialogComponent } from "../alert-dialog";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [accessToken, setAccessToken] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
+  const [showDialog, setShowDialog] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(LoginSchema),
@@ -36,20 +37,27 @@ const LoginForm = () => {
     },
   });
 
-  const onSubmit = async (formData: FormData) => {
-    const response = await LoginAction(formData);
-    const result = await response.json();
-    if (result.token) {
+  const handleDialogClose = () => {
+    setShowDialog(false);
+  };
+
+  const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
+    const response = await LoginAction(data);
+
+    if (response.token && response.admin) {
       setLoading(true);
-      setIsLoggedIn(true);
-      setAccessToken(result.token);
-      setLocalStorage("isLoggedIn", isLoggedIn);
-      setLocalStorage("accessToken", accessToken);
+      await setCookie("accessToken", response.token);
+      await setCookie("admin", response.admin);
       router.push("/dashboard");
     } else {
-      setErrorMessage(result.message);
+      setShowDialog(true);
+      setErrorMessage(response.message);
       setLoading(false);
     }
+  };
+
+  const handleLoginConfirmation = async () => {
+    setShowDialog(false); // Close the dialog after confirmation
   };
 
   const { pending } = useFormStatus();
@@ -61,7 +69,7 @@ const LoginForm = () => {
       backButtonLabel="Don't have an account? Register here."
     >
       <Form {...form}>
-        <form action={onSubmit} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
             <FormField
               control={form.control}
@@ -103,6 +111,17 @@ const LoginForm = () => {
           </Button>
         </form>
       </Form>
+
+      <div>
+        <AlertDialogComponent
+          showDialog={showDialog}
+          onClose={handleDialogClose}
+          title="Login Not Allowed"
+          description="You are not allowed to log in. This action cannot be undone. Please contact support if you believe this is an error."
+          handleConfirmation={handleLoginConfirmation}
+        />
+      </div>
+
       <div className="mt-5">
         {errorMessage && <AlertMessage message={errorMessage} />}
       </div>

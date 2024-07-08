@@ -9,18 +9,18 @@ import Navbar from "@/components/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "PSL-Teams",
-  description: "Teams feature created to get and add the information about teams."
+  title: "PSL-Admins",
+  description: "Admins feature is created to control the app different features."
 };
 
-export default function TeamsLayout({
+export default function AdminsLayout({
   children
 }: {
   children: React.ReactNode;
 }) {
   return (
     <html lang="en">
-       <body
+      <body
         className={cn(
           "min-h-screen w-full bg-white text-black flex ",
           inter.className

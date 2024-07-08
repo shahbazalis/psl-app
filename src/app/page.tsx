@@ -1,10 +1,11 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import "./globals.css";
+
  
 const Home = () => {
-  console.log("Here in the Home Page")
   const router = useRouter();
 
   useEffect(() => {
@@ -16,3 +17,4 @@ const Home = () => {
 };
 
 export default Home;
+
