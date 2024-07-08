@@ -20,16 +20,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -40,6 +30,7 @@ import { getCookie } from "@/lib/cookies";
 import { UpdatePlayer } from "@/app/server-actions/players-actions";
 import { Team } from "../teams/teams-table";
 import { useRouter } from "next/navigation";
+import { AlertDialogComponent } from "../alert-dialog";
 
 export default function PlayerDetail() {
   const [bidValue, setBidValue] = useState(0);
@@ -83,6 +74,10 @@ export default function PlayerDetail() {
     } else if (action === "sold") {
       setShowDialog(true);
     }
+  };
+
+  const handleDialogClose = () => {
+    setShowDialog(false);
   };
 
   const handleSoldConfirmation = async () => {
@@ -167,7 +162,7 @@ export default function PlayerDetail() {
                       <FormControl>
                         <RadioGroup
                           value={field.value}
-                          onValueChange={(value) => {
+                          onValueChange={(value: any) => {
                             field.onChange(value);
                           }}
                         >
@@ -212,25 +207,14 @@ export default function PlayerDetail() {
             </form>
           </Form>
           <div>
-            <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will mark the player as
-                    sold and update the records.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel onClick={() => setShowDialog(false)}>
-                    Cancel
-                  </AlertDialogCancel>
-                  <AlertDialogAction onClick={handleSoldConfirmation}>
-                    Confirm
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <AlertDialogComponent
+              showDialog={showDialog}
+              onClose={handleDialogClose}
+              title="Are you absolutely sure?"
+              description=" This action cannot be undone. This will mark the player as
+                    sold and update the records."
+              handleConfirmation={handleSoldConfirmation}
+            />
           </div>
         </div>
       </CardContent>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -13,8 +13,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -30,54 +28,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DeleteTeam } from "@/app/server-actions/teams-actions";
-import { getCookie } from "@/lib/cookies";
+import { ArrowUpDown, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Team } from "@/app/teams/page";
+import { Player } from "@/app/players/page";
 
-
-export type TeamsTableProps = {
-  teams: Team[];
-  selectedTeam ?: Team | null;
-  setSelectedTeam ?: (team: Team) => void;
-  component: string;
+export type TeamPlayersTableProps = {
+  selectedTeam: Team;
 };
-
-export default function TeamsTable({
-  teams: initialTeams,
-  selectedTeam,
-  setSelectedTeam,
-  component,
-}: TeamsTableProps) {
-  const [teams, setTeams] = useState<Team[]>([]);
+export function TeamPlayers({ selectedTeam }: TeamPlayersTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [isAdmin, setIsAdmin] = useState(false);
-  useEffect(() => {
-    setTeams(initialTeams);
-  }, [initialTeams]);
 
-  useEffect(() => {
-    const fetchAdminStatus = async () => {
-      let fetchAdminStatus = await getCookie("admin");
-      if (fetchAdminStatus) {
-        let admin = JSON.parse(fetchAdminStatus);
-        setIsAdmin(admin);
-      }
-    };
-
-    fetchAdminStatus();
-  }, []);
-
-  const handleDeleteTeam = async (teamId: string) => {
-    if (window.confirm("Are you sure you want to delete this team?")) {
-      await DeleteTeam(teamId);
-      setTeams(teams.filter((team) => team.id !== teamId));
-    }
-  };
-
-  const columns: ColumnDef<Team>[] = [
+  const columns: ColumnDef<Player>[] = [
     {
       accessorKey: "name",
       header: ({ column }) => {
@@ -95,30 +60,46 @@ export default function TeamsTable({
         <div className="capitalize">{row.getValue("name")}</div>
       ),
     },
-  ];
-  if (component !== "Dashboard" && isAdmin) {
-    columns.push({
-      accessorKey: "actions",
-      header: "Actions",
-      enableHiding: true,
-      cell: ({ row }) => {
-        const selectedTeam = row.original;
-
+    {
+      accessorKey: "email",
+      header: ({ column }) => {
         return (
           <Button
             variant="ghost"
-            className="flex items-center space-x-2"
-            onClick={() => handleDeleteTeam(selectedTeam.id)}
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            <Trash2 className="h-6 w-6 text-red-700" />
+            Email
+            <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
-    });
-  }
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("email")}</div>
+      ),
+    },
+    {
+      accessorKey: "role",
+      header: "Role",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("role")}</div>
+      ),
+    },
+    {
+      accessorKey: "phoneNumber",
+      header: "Phone Number",
+      cell: ({ row }) => <div>{row.getValue("phoneNumber")}</div>,
+    },
+    {
+      accessorKey: "nationality",
+      header: "Nationality",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("nationality")}</div>
+      ),
+    },
+  ];
 
   const table = useReactTable({
-    data: teams,
+    data: selectedTeam.players,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -135,12 +116,6 @@ export default function TeamsTable({
       rowSelection,
     },
   });
-
-  const handleRowClick = (team: Team) => {
-    if (setSelectedTeam) {
-      setSelectedTeam(team);
-    }
-  };
 
   return (
     <div className={"w-full"}>
@@ -205,10 +180,6 @@ export default function TeamsTable({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  onClick={() => handleRowClick(row.original)}
-                  className={
-                    selectedTeam?.id === row.original.id ? "bg-slate-300 hover:bg-blue-200" : ""
-                  }
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
@@ -236,7 +207,7 @@ export default function TeamsTable({
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          Total Registered Teams are {table.getFilteredRowModel().rows.length}
+          Total Players in Team are {table.getFilteredRowModel().rows.length}
         </div>
         <div className="space-x-2">
           <Button

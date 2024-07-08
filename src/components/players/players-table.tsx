@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, createContext,useContext } from "react";
+import { useState, useEffect } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { AddAdmin } from "@/app/server-actions/admins-actions";
 import {
   DropdownMenu,
@@ -53,13 +52,9 @@ import {
   UpdatePlayer,
   DeletePlayer,
 } from "@/app/server-actions/players-actions";
-import { TeamsList, Team } from "@/app/server-actions/teams-actions";
-import { setCookie } from "@/lib/cookies";
-export type Team = {
-  id: string;
-  name: string;
-};
-
+import { TeamsList } from "@/app/server-actions/teams-actions";
+import { setCookie, getCookie } from "@/lib/cookies";
+import { Team } from "@/app/teams/page";
 type PlayersTableProps = {
   players: Player[];
 };
@@ -73,6 +68,7 @@ export default function PlayersTable({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [teams, setTeams] = useState<Team[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -80,10 +76,22 @@ export default function PlayersTable({
   }, [initialPlayers]);
 
   useEffect(() => {
+    const fetchAdminStatus = async () => {
+      let fetchAdminStatus = await getCookie("admin");
+      if (fetchAdminStatus) {
+        let admin = JSON.parse(fetchAdminStatus);
+        setIsAdmin(admin);
+      }
+    };
+
+    fetchAdminStatus();
+  }, []);
+
+  useEffect(() => {
     const fetchTeams = async () => {
       const fetchedTeams = await TeamsList();
       setTeams(fetchedTeams);
-      await setCookie("teams",JSON.stringify(fetchedTeams));
+      await setCookie("teams", JSON.stringify(fetchedTeams));
     };
 
     fetchTeams();
@@ -117,33 +125,11 @@ export default function PlayersTable({
   };
 
   const handlePlayerDetails = async (player: Player) => {
-     await setCookie("player", JSON.stringify(player));
+    await setCookie("player", JSON.stringify(player));
     router.push("/players/player");
   };
 
   const columns: ColumnDef<Player>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
     {
       accessorKey: "status",
       header: "Status",
@@ -216,7 +202,7 @@ export default function PlayersTable({
               handleTeamChange(row.original.id, newTeamId)
             }
             value={teamId}
-            disabled={!row.getIsSelected()}
+            disabled={!isAdmin}
           >
             <SelectTrigger className="w-[150px]">
               <SelectValue placeholder="Select a Team" />
@@ -235,7 +221,10 @@ export default function PlayersTable({
         );
       },
     },
-    {
+  ];
+
+  if (isAdmin) {
+    columns.push({
       accessorKey: "actions",
       header: "Actions",
       enableHiding: true,
@@ -249,7 +238,6 @@ export default function PlayersTable({
                 variant="ghost"
                 className="flex items-center space-x-2"
                 onClick={() => handleDeletePlayer(player.id)}
-                disabled={!row.getIsSelected()}
               >
                 <UserRoundX className="h-5 w-5 text-red-700" />
               </Button>
@@ -259,7 +247,6 @@ export default function PlayersTable({
                 variant="ghost"
                 className="flex items-center space-x-2"
                 onClick={() => handleAddAdmin(player.id)}
-                disabled={!row.getIsSelected()}
               >
                 <UserPlus className="h-5 w-5 text-blue-700" />
               </Button>
@@ -270,14 +257,14 @@ export default function PlayersTable({
                 className="flex items-center space-x-2"
                 onClick={() => handlePlayerDetails(player)}
               >
-                <BookUser  className="h-5 w-5 text-blue-700" />
+                <BookUser className="h-5 w-5 text-blue-700" />
               </Button>
             </div>
           </div>
         );
       },
-    },
-  ];
+    });
+  }
 
   const table = useReactTable({
     data: players,
@@ -388,8 +375,7 @@ export default function PlayersTable({
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          Total Registered Players are {table.getFilteredRowModel().rows.length}
         </div>
         <div className="space-x-2">
           <Button

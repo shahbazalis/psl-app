@@ -25,7 +25,10 @@ export default function Players() {
   useEffect(() => {
     const getListofPlayers = async () => {
       const players = await PlayersList();
-      setPlayers(players);
+      setPlayers(
+        players.filter((player: { name: string }) => player.name !== "Alis")
+      );
+      //setPlayers(players);
     };
 
     getListofPlayers();

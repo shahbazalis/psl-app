@@ -19,7 +19,7 @@ export const TeamsList = async () => {
   }
 };
 
-export const Team = async (id: string) => {
+export const GetTeam = async (id: string) => {
   try {
     const accessToken = await getCookie("accessToken");
     const response = await fetch(`${baseURL}/${id}`, {

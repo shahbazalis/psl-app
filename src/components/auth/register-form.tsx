@@ -16,6 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { RegisterSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -32,6 +41,7 @@ const RegisterForm = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
+  const [showDialog, setShowDialog] = useState(false);
   const form = useForm({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -49,11 +59,16 @@ const RegisterForm = () => {
     const response = await PlayerRegistration(data);
     if (response.email) {
       setLoading(true);
-      router.push("/auth/login");
+      setShowDialog(true);
     } else {
       setErrorMessage(response.message);
       setLoading(false);
     }
+  };
+
+  const handleRegistrationConfirmation = async () => {
+    setShowDialog(false); // Close the dialog after confirmation
+    router.push("/auth/login");
   };
 
   const { pending } = useFormStatus();
@@ -192,6 +207,29 @@ const RegisterForm = () => {
           </Button>
         </form>
       </Form>
+      <div>
+        <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-green-600 text-2xl font-bold font-serif">
+                Registration Successful!
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-black text-lg font-medium Times New Roman">
+                You have successfully registered for PSL Tampere 2024. Get ready
+                for an exciting season ahead!
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction
+                onClick={handleRegistrationConfirmation}
+                className="text-green-600 hover:bg-green-100"
+              >
+                Confirm
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
       <div className="mt-5">
         {errorMessage && <AlertMessage message={errorMessage} />}
       </div>

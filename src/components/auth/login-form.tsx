@@ -21,11 +21,13 @@ import { AlertMessage } from "../Alert";
 import { LoginAction } from "@/app/server-actions/login-action";
 import { z } from "zod";
 import { setCookie } from "@/lib/cookies";
+import { AlertDialogComponent } from "../alert-dialog";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
+  const [showDialog, setShowDialog] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(LoginSchema),
@@ -35,16 +37,27 @@ const LoginForm = () => {
     },
   });
 
+  const handleDialogClose = () => {
+    setShowDialog(false);
+  };
+
   const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
     const response = await LoginAction(data);
-    if (response.token) {
+
+    if (response.token && response.admin) {
       setLoading(true);
       await setCookie("accessToken", response.token);
+      await setCookie("admin", response.admin);
       router.push("/dashboard");
     } else {
+      setShowDialog(true);
       setErrorMessage(response.message);
       setLoading(false);
     }
+  };
+
+  const handleLoginConfirmation = async () => {
+    setShowDialog(false); // Close the dialog after confirmation
   };
 
   const { pending } = useFormStatus();
@@ -98,6 +111,17 @@ const LoginForm = () => {
           </Button>
         </form>
       </Form>
+
+      <div>
+        <AlertDialogComponent
+          showDialog={showDialog}
+          onClose={handleDialogClose}
+          title="Login Not Allowed"
+          description="You are not allowed to log in. This action cannot be undone. Please contact support if you believe this is an error."
+          handleConfirmation={handleLoginConfirmation}
+        />
+      </div>
+
       <div className="mt-5">
         {errorMessage && <AlertMessage message={errorMessage} />}
       </div>
