@@ -30,33 +30,43 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { DeleteTeam } from "@/app/server-actions/teams-actions";
 import { getCookie } from "@/lib/cookies";
 import { Team } from "@/app/teams/page";
 
+import { AlertDialogComponent } from "@/components/alert-dialog";
 
 export type TeamsTableProps = {
   teams: Team[];
-  selectedTeam ?: Team | null;
-  setSelectedTeam ?: (team: Team) => void;
+  setTeams?: (teams: Team[]) => void;
+  selectedTeam?: Team | null;
+  setSelectedTeam?: (team: Team) => void;
   component: string;
 };
 
 export default function TeamsTable({
-  teams: initialTeams,
+  teams,
+  setTeams,
   selectedTeam,
   setSelectedTeam,
   component,
 }: TeamsTableProps) {
-  const [teams, setTeams] = useState<Team[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [isAdmin, setIsAdmin] = useState(false);
-  useEffect(() => {
-    setTeams(initialTeams);
-  }, [initialTeams]);
+  const [showDialog, setShowDialog] = useState(false);
+  const [teamId, setTeamId] = useState("");
+  const [deleteMessage, setDeleteMessage] = useState("");
+  const [deleteAlertTitle, setDeleteAlertTitle] = useState("");
+  const [teamTobeDeleted, setTeamTobeDeleted] = useState<Team | null>(null);
 
   useEffect(() => {
     const fetchAdminStatus = async () => {
@@ -70,11 +80,58 @@ export default function TeamsTable({
     fetchAdminStatus();
   }, []);
 
-  const handleDeleteTeam = async (teamId: string) => {
-    if (window.confirm("Are you sure you want to delete this team?")) {
+  useEffect(() => {
+    const fetchAdminStatus = async () => {
+      let fetchAdminStatus = await getCookie("admin");
+      if (fetchAdminStatus) {
+        let admin = JSON.parse(fetchAdminStatus);
+        setIsAdmin(admin);
+      }
+    };
+
+    fetchAdminStatus();
+  }, []);
+
+  const handleDeleteTeam = async (id: string) => {
+    const dltTeam = teams.find((team) => team.id === id);
+    if (dltTeam) {
+      setTeamTobeDeleted(dltTeam);
+      if (dltTeam.players && dltTeam.players.length > 0) {
+        setDeleteAlertTitle("Sorry!");
+        setDeleteMessage(
+          "This team has acquired some players; therefore, it cannot be deleted."
+        );
+      } else {
+        setDeleteAlertTitle("Are you absolutely sure?");
+        setDeleteMessage(
+          "This team will be deleted, and this action cannot be undone."
+        );
+      }
+    }
+    setShowDialog(true);
+    setTeamId(id);
+  };
+  const handleRowClick = (team: Team) => {
+    if (setSelectedTeam) {
+      setSelectedTeam(team);
+    }
+  };
+  const handleDialogClose = () => {
+    setShowDialog(false);
+  };
+
+  const handleDeleteConfirmation = async () => {
+    if (!teams || !Array.isArray(teams)) {
+      return; // Ensure teams is defined and is an array
+    }
+    if (
+      teamTobeDeleted &&
+      (!teamTobeDeleted.players || teamTobeDeleted.players.length === 0)
+    ) {
       await DeleteTeam(teamId);
       setTeams(teams.filter((team) => team.id !== teamId));
     }
+    setShowDialog(false);
   };
 
   const columns: ColumnDef<Team>[] = [
@@ -102,16 +159,24 @@ export default function TeamsTable({
       header: "Actions",
       enableHiding: true,
       cell: ({ row }) => {
-        const selectedTeam = row.original;
-
+        const teamForDeletion = row.original;
         return (
-          <Button
-            variant="ghost"
-            className="flex items-center space-x-2"
-            onClick={() => handleDeleteTeam(selectedTeam.id)}
-          >
-            <Trash2 className="h-6 w-6 text-red-700" />
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="flex items-center space-x-2"
+                  onClick={() => handleDeleteTeam(teamForDeletion.id)}
+                >
+                  <Trash2 className="h-6 w-6 text-red-700" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Delete Team</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         );
       },
     });
@@ -135,12 +200,6 @@ export default function TeamsTable({
       rowSelection,
     },
   });
-
-  const handleRowClick = (team: Team) => {
-    if (setSelectedTeam) {
-      setSelectedTeam(team);
-    }
-  };
 
   return (
     <div className={"w-full"}>
@@ -201,26 +260,30 @@ export default function TeamsTable({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  onClick={() => handleRowClick(row.original)}
-                  className={
-                    selectedTeam?.id === row.original.id ? "bg-slate-300 hover:bg-blue-200" : ""
-                  }
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+            {table.getFilteredRowModel().rows ? (
+              table.getRowModel().rows.map((row) => {
+                return (
+                  <TableRow
+                    key={row.original.id}
+                    onClick={() => handleRowClick(row.original)}
+                    className={
+                      selectedTeam?.id === row.original.id
+                        ? "bg-slate-300 hover:bg-blue-200"
+                        : ""
+                    }
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                );
+              })
             ) : (
               <TableRow>
                 <TableCell
@@ -255,6 +318,15 @@ export default function TeamsTable({
           >
             Next
           </Button>
+        </div>
+        <div>
+          <AlertDialogComponent
+            showDialog={showDialog}
+            onClose={handleDialogClose}
+            title={deleteAlertTitle}
+            description={deleteMessage}
+            handleConfirmation={handleDeleteConfirmation}
+          />
         </div>
       </div>
     </div>

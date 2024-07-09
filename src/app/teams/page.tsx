@@ -52,8 +52,9 @@ export default function Teams() {
 
   const memoizedTeamsTable = useMemo(
     () => <TeamsTable teams={teams} 
+    setTeams = {setTeams}
     selectedTeam={selectedTeam}
-    setSelectedTeam={setSelectedTeam}component="Teams" />,
+    setSelectedTeam={setSelectedTeam} component="Teams" />,
     [teams, selectedTeam]
   );
 

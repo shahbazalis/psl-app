@@ -47,6 +47,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Player } from "@/app/players/page";
 import {
   UpdatePlayer,
@@ -55,6 +61,8 @@ import {
 import { TeamsList } from "@/app/server-actions/teams-actions";
 import { setCookie, getCookie } from "@/lib/cookies";
 import { Team } from "@/app/teams/page";
+import { AlertDialogComponent } from "@/components/alert-dialog";
+
 type PlayersTableProps = {
   players: Player[];
 };
@@ -69,6 +77,12 @@ export default function PlayersTable({
   const [rowSelection, setRowSelection] = useState({});
   const [teams, setTeams] = useState<Team[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState("");
+  const [addAdminMessage, setAddAdminMessage] = useState("");
+  const [deleteAlertTitle, setDeleteAlertTitle] = useState("");
+  const [addAdminId, setAddAdminId] = useState("");
+  const [deletedPlayer, setDeletedPlayer] = useState<Player | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -111,22 +125,49 @@ export default function PlayersTable({
       )
     );
   };
-  const handleDeletePlayer = async (playerId: string) => {
-    if (window.confirm("Are you sure you want to delete this player?")) {
-      await DeletePlayer(playerId);
-      setPlayers(players.filter((player) => player.id !== playerId));
+  const handleDeletePlayer = async (dltdPlayer: Player) => {
+    if (dltdPlayer.status === "SOLD") {
+      setDeleteAlertTitle("Sorry!");
+      setDeleteMessage(
+        "This player is already sold; therefore, it cannot be deleted."
+      );
+    } else {
+      setDeleteAlertTitle("Are you absolutely sure?");
+      setDeleteMessage(
+        "This player will be deleted, and this action cannot be undone."
+      );
     }
+    setShowDialog(true);
+    setDeletedPlayer(dltdPlayer);
   };
 
   const handleAddAdmin = async (playerId: string) => {
-    if (window.confirm("Are you sure you want to add this player as admin?")) {
-      await AddAdmin(playerId);
-    }
+    setDeleteAlertTitle("Are you absolutely sure?");
+    setAddAdminMessage("Are you sure you want to add this player as an admin?");
+    setShowDialog(true);
+    setAddAdminId(playerId);
   };
 
   const handlePlayerDetails = async (player: Player) => {
     await setCookie("player", JSON.stringify(player));
     router.push("/players/player");
+  };
+
+  const handleDialogClose = () => {
+    setShowDialog(false);
+  };
+
+  const handleDeleteConfirmation = async () => {
+    if (deletedPlayer && deletedPlayer.status != "SOLD") {
+      await DeletePlayer(deletedPlayer.id);
+      setPlayers(players.filter((player) => player.id !== deletedPlayer.id));
+    }
+    setShowDialog(false);
+  };
+
+  const handleAddAdminConfirmation = async () => {
+    await AddAdmin(addAdminId);
+    setShowDialog(false);
   };
 
   const columns: ColumnDef<Player>[] = [
@@ -234,31 +275,60 @@ export default function PlayersTable({
         return (
           <div className="flex flex-row">
             <div>
-              <Button
-                variant="ghost"
-                className="flex items-center space-x-2"
-                onClick={() => handleDeletePlayer(player.id)}
-              >
-                <UserRoundX className="h-5 w-5 text-red-700" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="flex items-center space-x-2"
+                      onClick={() => handleDeletePlayer(player)}
+                      disabled={player.status==='SOLD'}
+                    >
+                      <UserRoundX className="h-5 w-5 text-red-700" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Remove Player Registration</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
             <div>
-              <Button
-                variant="ghost"
-                className="flex items-center space-x-2"
-                onClick={() => handleAddAdmin(player.id)}
-              >
-                <UserPlus className="h-5 w-5 text-blue-700" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="flex items-center space-x-2"
+                      onClick={() => handleAddAdmin(player.id)}
+                    >
+                      <UserPlus className="h-5 w-5 text-blue-700" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Add Player as an Admin</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
             <div>
-              <Button
-                variant="ghost"
-                className="flex items-center space-x-2"
-                onClick={() => handlePlayerDetails(player)}
-              >
-                <BookUser className="h-5 w-5 text-blue-700" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="flex items-center space-x-2"
+                      onClick={() => handlePlayerDetails(player)}
+                      disabled={player.status==='SOLD'}
+                    >
+                      <BookUser className="h-5 w-5 text-blue-700" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Open Player Details</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         );
@@ -394,6 +464,17 @@ export default function PlayersTable({
           >
             Next
           </Button>
+        </div>
+        <div>
+          <AlertDialogComponent
+            showDialog={showDialog}
+            onClose={handleDialogClose}
+            title={deleteAlertTitle}
+            description={deleteMessage || addAdminMessage}
+            handleConfirmation={
+              handleDeleteConfirmation || handleAddAdminConfirmation
+            }
+          />
         </div>
       </div>
     </div>

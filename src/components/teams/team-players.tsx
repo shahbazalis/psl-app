@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -36,11 +36,16 @@ import { Player } from "@/app/players/page";
 export type TeamPlayersTableProps = {
   selectedTeam: Team;
 };
-export function TeamPlayers({ selectedTeam }: TeamPlayersTableProps) {
+export function TeamPlayers({ selectedTeam}: TeamPlayersTableProps) {
+  const [players, setPlayers] = useState<Player[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+
+  useEffect(() => {
+    setPlayers(selectedTeam.players)
+  }, [selectedTeam.players]);
 
   const columns: ColumnDef<Player>[] = [
     {
@@ -99,7 +104,7 @@ export function TeamPlayers({ selectedTeam }: TeamPlayersTableProps) {
   ];
 
   const table = useReactTable({
-    data: selectedTeam.players,
+    data: players || [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -176,11 +181,11 @@ export function TeamPlayers({ selectedTeam }: TeamPlayersTableProps) {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+          {table && table.getRowModel() && table.getRowModel().rows ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() ? "selected" : undefined} 
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

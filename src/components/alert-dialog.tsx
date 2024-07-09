@@ -41,7 +41,7 @@ export function AlertDialogComponent({
             onClick={handleConfirmation}
             className={"bg-green-600 text-white hover:bg-lime-500"}
           >
-            Confirm
+            Ok
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

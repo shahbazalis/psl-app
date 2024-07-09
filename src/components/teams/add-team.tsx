@@ -22,7 +22,7 @@ import { AddTeamSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { Team } from "./teams-table";
+import { Team } from "@/app/teams/page";
 type AddTeamFormProps = {
   onClose: () => void;
   addNewTeam: (newTeam: Team) => void;

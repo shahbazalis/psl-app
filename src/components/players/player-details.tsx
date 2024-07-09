@@ -28,7 +28,7 @@ import { BidPlayerSchema } from "@/schema";
 import { Player } from "@/app/players/page";
 import { getCookie } from "@/lib/cookies";
 import { UpdatePlayer } from "@/app/server-actions/players-actions";
-import { Team } from "../teams/teams-table";
+import { Team } from "@/app/teams/page";
 import { useRouter } from "next/navigation";
 import { AlertDialogComponent } from "../alert-dialog";
 
@@ -36,7 +36,7 @@ export default function PlayerDetail() {
   const [bidValue, setBidValue] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedRadio, setSelectedRadio] = useState("");
-  const [selectedPlayer, setSelectedPlayer] = useState<Player>({});
+  const [selectedPlayer, setSelectedPlayer] = useState<Player| null>(null);
   const [teams, setTeams] = useState<Team[]>([]);
   const [showDialog, setShowDialog] = useState(false);
   const router = useRouter();
@@ -102,10 +102,10 @@ export default function PlayerDetail() {
           <CircleUserRound className="h-24 w-24" />
           <div className="flex-1 space-y-1">
             <p className="text-sm font-medium leading-none">
-              {selectedPlayer.name}
+            {selectedPlayer && selectedPlayer.name}
             </p>
             <p className="text-sm text-muted-foreground">
-              {selectedPlayer.role}
+              {selectedPlayer && selectedPlayer.role}
             </p>
           </div>
         </div>
@@ -143,7 +143,7 @@ export default function PlayerDetail() {
                             form.watch("team") && (
                               <p className="text-lg font-semibold leading-none mt-4">
                                 {selectedRadio} made a bid of {bidValue} for{" "}
-                                {selectedPlayer.name}
+                                {selectedPlayer &&selectedPlayer.name}
                               </p>
                             )}
                         </div>

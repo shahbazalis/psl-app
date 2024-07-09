@@ -34,7 +34,7 @@ import { useFormStatus } from "react-dom";
 import { z } from "zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { PlayerRegistration } from "@/app/server-actions/players-actions";
+import { PlayerRegistration, SendEmail } from "@/app/server-actions/players-actions";
 import { AlertMessage } from "../Alert";
 
 const RegisterForm = () => {
@@ -60,6 +60,8 @@ const RegisterForm = () => {
     if (response.email) {
       setLoading(true);
       setShowDialog(true);
+      const emailResponse = await SendEmail(data);
+      console.log("Email Response:",emailResponse);
     } else {
       setErrorMessage(response.message);
       setLoading(false);

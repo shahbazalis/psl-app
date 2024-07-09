@@ -1,7 +1,41 @@
 "use server";
 import { Player } from "../players/page";
+import { Resend } from "resend";
+import EmailTemplate from "@/components/email-template";
+
+interface State {
+  error: string | null;
+  success: boolean;
+}
+
 const baseURL = "http://localhost:3001/players";
 import { getCookie } from "@/lib/cookies";
+export const SendEmail = async (props: Partial<Player>) => {
+  const name = props.name as string;
+  const email = props.email as string;
+  const message =
+    "Congratulations! You are now officially registered for PSL Tampere." as string;
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: "psltampere@gmail.com",
+      to: "engr.shahbaz92@gmail.com",
+      subject: "PSL Registration",
+      react: EmailTemplate({ name, email, message }),
+    });
+    return {
+      error: null,
+      success: true,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error: (error as Error).message,
+      success: false,
+    };
+  }
+};
+
 export const PlayerRegistration = async (props: Partial<Player>) => {
   const email = props.email;
   const name = props.name;
@@ -16,7 +50,7 @@ export const PlayerRegistration = async (props: Partial<Player>) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-         "Authorization": `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         email,
@@ -40,7 +74,7 @@ export const PlayersList = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-         "Authorization": `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     const data = await response.json();
@@ -56,7 +90,7 @@ export const DeletePlayer = async (id: string) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-         "Authorization": `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     const data = await response.json();
@@ -77,7 +111,7 @@ export const UpdatePlayer = async (
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-         "Authorization": `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({ status, teamId }),
     });
