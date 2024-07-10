@@ -3,25 +3,19 @@ import { Player } from "../players/page";
 import { Resend } from "resend";
 import EmailTemplate from "@/components/email-template";
 
-interface State {
-  error: string | null;
-  success: boolean;
-}
 
 const baseURL = "http://localhost:3001/players";
 import { getCookie } from "@/lib/cookies";
 export const SendEmail = async (props: Partial<Player>) => {
   const name = props.name as string;
   const email = props.email as string;
-  const message =
-    "Congratulations! You are now officially registered for PSL Tampere." as string;
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
-      from: "psltampere@gmail.com",
-      to: "engr.shahbaz92@gmail.com",
+      from: "Acme <onboarding@resend.dev>",
+      to: [email],
       subject: "PSL Registration",
-      react: EmailTemplate({ name, email, message }),
+      react: EmailTemplate({ name }),
     });
     return {
       error: null,
