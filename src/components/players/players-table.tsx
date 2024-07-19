@@ -179,23 +179,6 @@ export default function PlayersTable({
       ),
     },
     {
-      accessorKey: "email",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Email
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("email")}</div>
-      ),
-    },
-    {
       accessorKey: "name",
       header: ({ column }) => {
         return (
@@ -225,11 +208,6 @@ export default function PlayersTable({
       cell: ({ row }) => (
         <div className="capitalize">{row.getValue("nationality")}</div>
       ),
-    },
-    {
-      accessorKey: "phoneNumber",
-      header: "Phone Number",
-      cell: ({ row }) => <div>{row.getValue("phoneNumber")}</div>,
     },
     {
       accessorKey: "teamId",
@@ -265,75 +243,101 @@ export default function PlayersTable({
   ];
 
   if (isAdmin) {
-    columns.push({
-      accessorKey: "actions",
-      header: "Actions",
-      enableHiding: true,
-      cell: ({ row }) => {
-        const player = row.original;
-
-        return (
-          <div className="flex flex-row">
-            <div>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="flex items-center space-x-2"
-                      onClick={() => handleDeletePlayer(player)}
-                      disabled={player.status==='SOLD'}
-                    >
-                      <UserRoundX className="h-5 w-5 text-red-700" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Remove Player Registration</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <div>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="flex items-center space-x-2"
-                      onClick={() => handleAddAdmin(player.id)}
-                    >
-                      <UserPlus className="h-5 w-5 text-blue-700" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Add Player as an Admin</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <div>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="flex items-center space-x-2"
-                      onClick={() => handlePlayerDetails(player)}
-                      disabled={player.status==='SOLD'}
-                    >
-                      <BookUser className="h-5 w-5 text-blue-700" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Open Player Details</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-          </div>
-        );
+    columns.push(
+      {
+        accessorKey: "phoneNumber",
+        header: "Phone Number",
+        cell: ({ row }) => <div>{row.getValue("phoneNumber")}</div>,
       },
-    });
+      {
+        accessorKey: "email",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
+              Email
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          );
+        },
+        cell: ({ row }) => (
+          <div className="lowercase">{row.getValue("email")}</div>
+        ),
+      },
+      {
+        accessorKey: "actions",
+        header: "Actions",
+        enableHiding: true,
+        cell: ({ row }) => {
+          const player = row.original;
+
+          return (
+            <div className="flex flex-row">
+              <div>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="flex items-center space-x-2"
+                        onClick={() => handleDeletePlayer(player)}
+                        disabled={player.status === "SOLD"}
+                      >
+                        <UserRoundX className="h-5 w-5 text-red-700" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Remove Player Registration</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <div>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="flex items-center space-x-2"
+                        onClick={() => handleAddAdmin(player.id)}
+                      >
+                        <UserPlus className="h-5 w-5 text-blue-700" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Add Player as an Admin</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <div>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="flex items-center space-x-2"
+                        onClick={() => handlePlayerDetails(player)}
+                        disabled={player.status === "SOLD"}
+                      >
+                        <BookUser className="h-5 w-5 text-blue-700" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Open Player Details</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </div>
+          );
+        },
+      }
+    );
   }
 
   const table = useReactTable({
@@ -359,10 +363,10 @@ export default function PlayersTable({
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter names..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

@@ -32,6 +32,7 @@ import { ArrowUpDown, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Team } from "@/app/teams/page";
 import { Player } from "@/app/players/page";
+import { getCookie } from "@/lib/cookies";
 
 export type TeamPlayersTableProps = {
   selectedTeam: Team;
@@ -41,11 +42,25 @@ export function TeamPlayers({ selectedTeam}: TeamPlayersTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [isAdmin, setIsAdmin] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
+
 
   useEffect(() => {
     setPlayers(selectedTeam.players)
   }, [selectedTeam.players]);
+
+  useEffect(() => {
+    const fetchAdminStatus = async () => {
+      let fetchAdminStatus = await getCookie("admin");
+      if (fetchAdminStatus) {
+        let admin = JSON.parse(fetchAdminStatus);
+        setIsAdmin(admin);
+      }
+    };
+
+    fetchAdminStatus();
+  }, []);
 
   const columns: ColumnDef<Player>[] = [
     {
@@ -66,33 +81,11 @@ export function TeamPlayers({ selectedTeam}: TeamPlayersTableProps) {
       ),
     },
     {
-      accessorKey: "email",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Email
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("email")}</div>
-      ),
-    },
-    {
       accessorKey: "role",
       header: "Role",
       cell: ({ row }) => (
         <div className="capitalize">{row.getValue("role")}</div>
       ),
-    },
-    {
-      accessorKey: "phoneNumber",
-      header: "Phone Number",
-      cell: ({ row }) => <div>{row.getValue("phoneNumber")}</div>,
     },
     {
       accessorKey: "nationality",
@@ -102,6 +95,35 @@ export function TeamPlayers({ selectedTeam}: TeamPlayersTableProps) {
       ),
     },
   ];
+
+  if (isAdmin) {
+    columns.push(
+      {
+        accessorKey: "phoneNumber",
+        header: "Phone Number",
+        cell: ({ row }) => <div>{row.getValue("phoneNumber")}</div>,
+      },
+      {
+        accessorKey: "email",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
+              Email
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          );
+        },
+        cell: ({ row }) => (
+          <div className="lowercase">{row.getValue("email")}</div>
+        ),
+      }
+    );
+  }
 
   const table = useReactTable({
     data: players || [],
