@@ -34,15 +34,19 @@ import { useFormStatus } from "react-dom";
 import { z } from "zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { PlayerRegistration, SendEmail } from "@/app/server-actions/players-actions";
+import {
+  PlayerRegistration,
+  SendEmail,
+} from "@/app/server-actions/players-actions";
 import { AlertMessage } from "../Alert";
 
+type RegisterFormData = z.infer<typeof RegisterSchema>;
 const RegisterForm = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
   const [showDialog, setShowDialog] = useState(false);
-  const form = useForm({
+  const form = useForm<RegisterFormData>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: "",
@@ -61,7 +65,7 @@ const RegisterForm = () => {
       setLoading(true);
       setShowDialog(true);
       const emailResponse = await SendEmail(data);
-      console.log("Email Response:",emailResponse);
+      console.log("Email Response:", emailResponse);
     } else {
       setErrorMessage(response.message);
       setLoading(false);
@@ -180,7 +184,7 @@ const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} type="password" placeholder="******" />
+                    <Input {...field} type="password" placeholder="" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -193,7 +197,7 @@ const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
-                    <Input {...field} type="password" placeholder="******" />
+                    <Input {...field} type="password" placeholder="" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -239,4 +243,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default RegisterForm;

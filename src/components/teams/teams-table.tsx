@@ -118,7 +118,7 @@ export default function TeamsTable({
     ) {
       const response = await DeleteTeam(teamId);
       if (response.statusCode !== 500) {
-        setTeams(teams.filter((team) => team.id !== teamId));
+        if (setTeams) setTeams(teams.filter((team) => team.id !== teamId));
       } else {
         toast({
           variant: "destructive",

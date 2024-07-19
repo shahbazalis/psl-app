@@ -27,11 +27,11 @@ const EmailTemplate = ({ name }: { name: string }) => {
           />
           <Text style={paragraph}>Hi {name},</Text>
           <Text style={paragraph}>
-            Welcome to PSL Tampere! We're thrilled to have you on board for what
+            Welcome to PSL Tampere! We are thrilled to have you on board for what
             promises to be an incredible season. Your registration is confirmed,
             and we look forward to an exciting journey together. Get ready for
             fantastic experiences, unforgettable moments, and a whole lot of
-            fun. Thank you for joining us, and let's make this season amazing!
+            fun. Thank you for joining us, and let us make this season amazing!
           </Text>
           <Text style={paragraph}>
             Best Regards,

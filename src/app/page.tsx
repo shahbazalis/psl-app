@@ -7,7 +7,6 @@ import "./globals.css";
  
 const Home = () => {
   const router = useRouter();
-
   useEffect(() => {
     // Redirect to /auth/login
     router.push("/auth/login");

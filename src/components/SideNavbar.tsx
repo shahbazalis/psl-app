@@ -1,4 +1,4 @@
-
+/** @format */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -46,19 +46,19 @@ export default function SideNavbar({}: Props) {
       title: "Dashboard",
       href: "/dashboard",
       icon: LayoutDashboard,
-      variant: "default",
+      variant: "default" as "default",
     },
     {
       title: "Players",
       href: "/players",
       icon: Users,
-      variant: "ghost",
+      variant: "ghost" as "ghost",
     },
     {
       title: "Teams",
       href: "/teams",
       icon: Users,
-      variant: "ghost",
+      variant: "ghost" as "ghost",
     },
   ];
 
@@ -67,7 +67,7 @@ export default function SideNavbar({}: Props) {
       title: "Admins",
       href: "/admins",
       icon: Users,
-      variant: "ghost",
+      variant: "ghost" as "ghost",
     });
   }
 
