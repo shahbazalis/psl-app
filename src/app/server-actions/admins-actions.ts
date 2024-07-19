@@ -1,7 +1,9 @@
 "use server";
 
-const baseURL = "http://localhost:3001/admins";
-import { getCookie} from "@/lib/cookies";
+import { getCookie } from "@/lib/cookies";
+
+const backendURL = process.env.DATA_BASE_URL;
+const baseURL = `${backendURL}/admins`;
 
 export const AdminsList = async () => {
   try {
@@ -10,7 +12,7 @@ export const AdminsList = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-         "Authorization": `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     const data = await response.json();
@@ -20,9 +22,7 @@ export const AdminsList = async () => {
   }
 };
 
-export const AddAdmin= async (
-  id: string
-) => {
+export const AddAdmin = async (id: string) => {
   try {
     const accessToken = await getCookie("accessToken");
     const admin = true;
@@ -30,7 +30,7 @@ export const AddAdmin= async (
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-         "Authorization": `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({ admin }),
     });

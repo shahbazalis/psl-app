@@ -1,5 +1,8 @@
 "use server";
-const baseURL = "http://localhost:3001/teams";
+
+const backendURL= process.env.DATA_BASE_URL;
+const baseURL = `${backendURL}/teams`;
+;
 import { getCookie } from "@/lib/cookies";
 export const TeamsList = async () => {
   try {

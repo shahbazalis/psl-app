@@ -5,11 +5,14 @@ export type LoginProps = {
   password: string;
 };
 
+const backendURL= process.env.DATA_BASE_URL
+const baseURL = `${backendURL}/auth/login`;
+
 export const LoginAction = async (props: LoginProps) => {
   const email = props.email;
   const password = props.password;
   try {
-    const response = await fetch("http://localhost:3001/auth/login", {
+    const response = await fetch(`${baseURL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

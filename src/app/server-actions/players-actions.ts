@@ -2,10 +2,11 @@
 import { Player } from "../players/page";
 import { Resend } from "resend";
 import EmailTemplate from "@/components/email-template";
-
-
-const baseURL = "http://localhost:3001/players";
 import { getCookie } from "@/lib/cookies";
+
+const backendURL= process.env.DATA_BASE_URL;
+const baseURL = `${backendURL}/players`;
+
 export const SendEmail = async (props: Partial<Player>) => {
   const name = props.name as string;
   const email = props.email as string;
