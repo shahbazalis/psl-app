@@ -6,23 +6,31 @@ import { AdminsList } from "../server-actions/admins-actions";
 
 import { Player } from "../players/page";
 import AdminsTable from "@/components/admins/admins-table";
+import LoadingComponent from "@/components/loader";
 
 export default function Admins() {
   const [admins, setAdmins] = useState<Player[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getListofPlayers = async () => {
-      const players = await AdminsList();
-      setAdmins(players);
+    const getListofAdmins = async () => {
+      const admins = await AdminsList();
+      if (admins.statusCode !== 500) {
+        setAdmins(admins);
+      } else console.log("error:", admins.message);
+      setLoading(false);
     };
 
-    getListofPlayers();
+    getListofAdmins();
   }, []);
 
   const memoizedAdminsTable = useMemo(
     () => <AdminsTable admins={admins} />,
     [admins]
   );
+  if (loading) {
+    return <LoadingComponent />;
+  }
 
   return (
     <>

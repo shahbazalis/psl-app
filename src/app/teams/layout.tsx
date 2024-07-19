@@ -10,28 +10,27 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "PSL-Teams",
-  description: "Teams feature created to get and add the information about teams."
+  description:
+    "Teams feature created to get and add the information about teams.",
 };
 
 export default function TeamsLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-       <body
-        className={cn(
-          "min-h-screen w-full bg-white text-black flex ",
-          inter.className
-        )}
-      >
-        <SideNavbar />
-        <div className="flex flex-col w-full">
-          <Navbar />
-          <div className="p-8 w-full">{children}</div>
-        </div>
-      </body>
-    </html>
+    <section
+      className={cn(
+        "min-h-screen w-full bg-white text-black flex ",
+        inter.className
+      )}
+    >
+      <SideNavbar />
+      <div className="flex flex-col w-full">
+        <Navbar />
+        <div className="p-8 w-full">{children}</div>
+      </div>
+    </section>
   );
 }

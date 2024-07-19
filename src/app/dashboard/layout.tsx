@@ -19,19 +19,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body
-        className={cn(
-          "min-h-screen w-full bg-white text-black flex ",
-          inter.className
-        )}
-      >
-        <SideNavbar />
-        <div className="flex flex-col w-full">
-          <Navbar />
-          <div className="p-8 w-full">{children}</div>
-        </div>
-      </body>
-    </html>
+    <section
+      className={cn(
+        "min-h-screen w-full bg-white text-black flex ",
+        inter.className
+      )}
+    >
+      <SideNavbar />
+      <div className="flex flex-col w-full">
+        <Navbar />
+        <div className="p-8 w-full">{children}</div>
+      </div>
+    </section>
   );
 }

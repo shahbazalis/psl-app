@@ -2,21 +2,23 @@
 import PageTitle from "@/components/PageTitle";
 import AddTeam from "@/components/teams/add-team";
 import { useState, useEffect, Suspense, useMemo } from "react";
-import { TeamsList} from "@/app/server-actions/teams-actions";
+import { TeamsList } from "@/app/server-actions/teams-actions";
 import TeamsTable from "@/components/teams/teams-table";
 import { getCookie } from "@/lib/cookies";
-import {TeamPlayers} from "@components/teams/team-players"
+import { TeamPlayers } from "@components/teams/team-players";
 import { Player } from "../players/page";
+import LoadingComponent from "@/components/loader";
 export type Team = {
   id: string;
   name: string;
-  players : Player []
+  players: Player[];
 };
 
 export default function Teams() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -26,6 +28,7 @@ export default function Teams() {
           (team: Team) => team.name !== "Default Team"
         );
         setTeams(updatedTeams);
+        setLoading(false);
         if (updatedTeams.length > 0) {
           setSelectedTeam(updatedTeams[0]);
         }
@@ -51,13 +54,20 @@ export default function Teams() {
   };
 
   const memoizedTeamsTable = useMemo(
-    () => <TeamsTable teams={teams} 
-    setTeams = {setTeams}
-    selectedTeam={selectedTeam}
-    setSelectedTeam={setSelectedTeam} component="Teams" />,
+    () => (
+      <TeamsTable
+        teams={teams}
+        setTeams={setTeams}
+        selectedTeam={selectedTeam}
+        setSelectedTeam={setSelectedTeam}
+        component="Teams"
+      />
+    ),
     [teams, selectedTeam]
   );
-
+  if (loading) {
+    return <LoadingComponent />;
+  }
   return (
     <>
       <PageTitle title="Teams" />

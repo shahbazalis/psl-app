@@ -39,6 +39,8 @@ import {
 import { DeleteTeam } from "@/app/server-actions/teams-actions";
 import { getCookie } from "@/lib/cookies";
 import { Team } from "@/app/teams/page";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 
 import { AlertDialogComponent } from "@/components/alert-dialog";
 
@@ -67,18 +69,7 @@ export default function TeamsTable({
   const [deleteMessage, setDeleteMessage] = useState("");
   const [deleteAlertTitle, setDeleteAlertTitle] = useState("");
   const [teamTobeDeleted, setTeamTobeDeleted] = useState<Team | null>(null);
-
-  useEffect(() => {
-    const fetchAdminStatus = async () => {
-      let fetchAdminStatus = await getCookie("admin");
-      if (fetchAdminStatus) {
-        let admin = JSON.parse(fetchAdminStatus);
-        setIsAdmin(admin);
-      }
-    };
-
-    fetchAdminStatus();
-  }, []);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchAdminStatus = async () => {
@@ -121,15 +112,21 @@ export default function TeamsTable({
   };
 
   const handleDeleteConfirmation = async () => {
-    if (!teams || !Array.isArray(teams)) {
-      return; // Ensure teams is defined and is an array
-    }
     if (
       teamTobeDeleted &&
       (!teamTobeDeleted.players || teamTobeDeleted.players.length === 0)
     ) {
-      await DeleteTeam(teamId);
-      setTeams(teams.filter((team) => team.id !== teamId));
+      const response = await DeleteTeam(teamId);
+      if (response.statusCode !== 500) {
+        setTeams(teams.filter((team) => team.id !== teamId));
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: response.message,
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
+      }
     }
     setShowDialog(false);
   };

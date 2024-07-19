@@ -11,25 +11,30 @@ import { PlayersList } from "../server-actions/players-actions";
 
 import { Team } from "../teams/page";
 import { Player } from "../players/page";
+import LoadingComponent from "@/components/loader";
 
 export default function Home() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [soldPlayers, setSoldPlayers] = useState<Player[]>([]);
   const [unSoldPlayers, setUnSoldPlayers] = useState<Player[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getListofPlayers = async () => {
       const fetchedPlayers = await PlayersList();
-      setSoldPlayers(
-        fetchedPlayers.filter(
-          (player: { status: string }) => player.status !== "UNSOLD"
-        )
-      );
-      setUnSoldPlayers(
-        fetchedPlayers.filter(
-          (player: { status: string }) => player.status !== "SOLD"
-        )
-      );
+      if (fetchedPlayers !== 500) {
+        setSoldPlayers(
+          fetchedPlayers.filter(
+            (player: { status: string }) => player.status !== "UNSOLD"
+          )
+        );
+        setUnSoldPlayers(
+          fetchedPlayers.filter(
+            (player: { status: string }) => player.status !== "SOLD"
+          )
+        );
+      } else console.log("error:", fetchedPlayers.message);
+      setLoading(false);
     };
 
     getListofPlayers();
@@ -46,6 +51,10 @@ export default function Home() {
 
     fetchTeams();
   }, []);
+
+  if (loading) {
+    return <LoadingComponent />;
+  }
 
   return (
     <div className="flex flex-col gap-5  w-full">

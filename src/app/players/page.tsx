@@ -4,6 +4,7 @@ import PageTitle from "@/components/PageTitle";
 import PlayersTable from "@/components/players/players-table";
 import { useState, useEffect, Suspense, useMemo } from "react";
 import { PlayersList } from "../server-actions/players-actions";
+import LoadingComponent from "@/components/loader";
 
 export type Player = {
   teamId: string;
@@ -21,14 +22,17 @@ export type Player = {
 
 export default function Players() {
   const [players, setPlayers] = useState<Player[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getListofPlayers = async () => {
       const players = await PlayersList();
-      setPlayers(
-        players.filter((player: { name: string }) => player.name !== "Alis")
-      );
-      //setPlayers(players);
+      if (players.statusCode !== 500) {
+        setPlayers(
+          players.filter((player: { name: string }) => player.name !== "Alis")
+        );
+      } else console.log("error:", players.message);
+      setLoading(false);
     };
 
     getListofPlayers();
@@ -38,6 +42,10 @@ export default function Players() {
     () => <PlayersTable players={players} />,
     [players]
   );
+
+  if (loading) {
+    return <LoadingComponent />;
+  }
 
   return (
     <>
