@@ -75,7 +75,7 @@ const Navbar = () => {
                     <MenubarItem
                       className={accessToken ? "pointer-events-none" : ""}
                     >
-                      Login as An Admin
+                      Login as an Admin
                     </MenubarItem>
                   </Link>
                 </MenubarContent>
