@@ -10,7 +10,7 @@ const Home = () => {
   
   useEffect(() => {
     // Redirect to /auth/login
-    router.push("/auth/login");
+    router.push("/auth/register");
   }, [router]);
 
   return null; // You can also return a loading indicator here if you want
