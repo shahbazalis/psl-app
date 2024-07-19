@@ -78,6 +78,14 @@ const Navbar = () => {
                       Login as an Admin
                     </MenubarItem>
                   </Link>
+                  <MenubarSeparator />
+                  <Link href="/auth/register">
+                    <MenubarItem
+                      className={accessToken ? "pointer-events-none" : ""}
+                    >
+                      Register as a Player
+                    </MenubarItem>
+                  </Link>
                 </MenubarContent>
               </MenubarMenu>
               <MenubarMenu>
@@ -98,27 +106,6 @@ const Navbar = () => {
                 </MenubarContent>
               </MenubarMenu>
             </Menubar>
-            {/* {accessToken ? (
-              <Button
-                onClick={handleRemove}
-                className="rounded-full p-2 bg-green-700 text-white"
-              >
-                <LogOut />
-              </Button>
-            ) : (
-              <div className="flex gap-x-4">
-                <Link href="/players">
-                  <Button className="bg-green-700 hover:bg-green-600 text-white">
-                    Players
-                  </Button>
-                </Link>
-                <Link href="/teams">
-                  <Button className="bg-green-700 hover:bg-green-600 text-white">
-                    Teams
-                  </Button>
-                </Link>
-              </div>
-            )} */}
           </div>
         </div>
       </MaxWidthWrapper>
