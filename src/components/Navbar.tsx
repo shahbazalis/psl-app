@@ -1,27 +1,11 @@
 "use client";
 
 import MaxWidthWrapper from "./MaxWidthWrapper";
-import { Button } from "./ui/button";
-import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { deleteCookies, getCookie } from "@/lib/cookies";
 import Link from "next/link";
-import {
-  Menubar,
-  MenubarCheckboxItem,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarRadioGroup,
-  MenubarRadioItem,
-  MenubarSeparator,
-  MenubarShortcut,
-  MenubarSub,
-  MenubarSubContent,
-  MenubarSubTrigger,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
+import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 
 const Navbar = () => {
   const router = useRouter();
@@ -84,7 +68,7 @@ const Navbar = () => {
                 </Link>
               </MenubarMenu>
               <MenubarMenu>
-                <Link  href="/teams">
+                <Link href="/teams">
                   <MenubarTrigger
                     className={
                       accessToken ? "opacity-50 cursor-not-allowed" : ""
