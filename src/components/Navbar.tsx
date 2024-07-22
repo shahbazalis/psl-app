@@ -48,45 +48,52 @@ const Navbar = () => {
           <div className="flex-grow flex justify-end">
             <Menubar>
               <MenubarMenu>
-                <MenubarTrigger
-                  className={accessToken ? "opacity-50 cursor-not-allowed" : ""}
-                  disabled={accessToken}
-                >
-                  View
-                </MenubarTrigger>
-                <MenubarContent>
-                  <Link href="/players">
-                    <MenubarItem
-                      className={accessToken ? "pointer-events-none" : ""}
-                    >
-                      Players
-                    </MenubarItem>
-                  </Link>
-                  <MenubarSeparator />
-                  <Link href="/teams">
-                    <MenubarItem
-                      className={accessToken ? "pointer-events-none" : ""}
-                    >
-                      Teams
-                    </MenubarItem>
-                  </Link>
-                  <MenubarSeparator />
-                  <Link href="/auth/login">
-                    <MenubarItem
-                      className={accessToken ? "pointer-events-none" : ""}
-                    >
-                      Login as an Admin
-                    </MenubarItem>
-                  </Link>
-                  <MenubarSeparator />
-                  <Link href="/auth/register">
-                    <MenubarItem
-                      className={accessToken ? "pointer-events-none" : ""}
-                    >
-                      Register as a Player
-                    </MenubarItem>
-                  </Link>
-                </MenubarContent>
+                <Link href="/auth/login">
+                  <MenubarTrigger
+                    className={
+                      accessToken ? "opacity-50 cursor-not-allowed" : ""
+                    }
+                    disabled={accessToken}
+                  >
+                    Login as Admin
+                  </MenubarTrigger>
+                </Link>
+              </MenubarMenu>
+              <MenubarMenu>
+                <Link href="/auth/register">
+                  <MenubarTrigger
+                    className={
+                      accessToken ? "opacity-50 cursor-not-allowed" : ""
+                    }
+                    disabled={accessToken}
+                  >
+                    Register as Player
+                  </MenubarTrigger>
+                </Link>
+              </MenubarMenu>
+              <MenubarMenu>
+                <Link href="/players">
+                  <MenubarTrigger
+                    className={
+                      accessToken ? "opacity-50 cursor-not-allowed" : ""
+                    }
+                    disabled={accessToken}
+                  >
+                    Players
+                  </MenubarTrigger>
+                </Link>
+              </MenubarMenu>
+              <MenubarMenu>
+                <Link  href="/teams">
+                  <MenubarTrigger
+                    className={
+                      accessToken ? "opacity-50 cursor-not-allowed" : ""
+                    }
+                    disabled={accessToken}
+                  >
+                    Teams
+                  </MenubarTrigger>
+                </Link>
               </MenubarMenu>
               <MenubarMenu>
                 <MenubarTrigger
@@ -94,16 +101,10 @@ const Navbar = () => {
                     !accessToken ? "opacity-50 cursor-not-allowed" : ""
                   }
                   disabled={!accessToken}
+                  onClick={handleRemove}
                 >
-                  Profiles
+                  Logout
                 </MenubarTrigger>
-                <MenubarContent>
-                  {accessToken && (
-                    <MenubarItem onClick={handleRemove} inset>
-                      Logout
-                    </MenubarItem>
-                  )}
-                </MenubarContent>
               </MenubarMenu>
             </Menubar>
           </div>
