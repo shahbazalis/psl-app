@@ -214,12 +214,9 @@ export default function PlayersTable({
       header: "Team",
       cell: ({ row }) => {
         const teamId: string = row.original.teamId;
-
-        return (
+        return isAdmin ? (
           <Select
-            onValueChange={(newTeamId) =>
-              handleTeamChange(row.original.id, newTeamId)
-            }
+            onValueChange={(newTeamId) => handleTeamChange(row.original.id, newTeamId)}
             value={teamId}
             disabled={!isAdmin}
           >
@@ -237,6 +234,8 @@ export default function PlayersTable({
               </SelectGroup>
             </SelectContent>
           </Select>
+        ) : (
+          <span>{row.original.team.name === "Default Team" ? "No Team" : row.original.team.name }</span>
         );
       },
     },
@@ -476,7 +475,9 @@ export default function PlayersTable({
             title={deleteAlertTitle}
             description={deleteMessage || addAdminMessage}
             handleConfirmation={
-              handleDeleteConfirmation || handleAddAdminConfirmation
+              deleteMessage
+                ? handleDeleteConfirmation
+                : handleAddAdminConfirmation
             }
           />
         </div>
