@@ -53,7 +53,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Player } from "@/app/players/page";
 import {
   UpdatePlayer,
   DeletePlayer,
@@ -62,14 +61,29 @@ import { TeamsList } from "@/app/server-actions/teams-actions";
 import { setCookie, getCookie } from "@/lib/cookies";
 import { Team } from "@/app/teams/page";
 import { AlertDialogComponent } from "@/components/alert-dialog";
+import { PlayersList } from "@/app/server-actions/players-actions";
+import LoadingComponent from "@/components/loader";
 
-type PlayersTableProps = {
-  players: Player[];
+export type Player = {
+  teamId: string;
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  phoneNumber: string;
+  nationality: string;
+  status: "SOLD" | "UNSOLD";
+  team: { name: string };
+  password?: string;
+  confirmPassword?: string;
 };
 
-export default function PlayersTable({
-  players: initialPlayers,
-}: PlayersTableProps) {
+
+// type PlayersTableProps = {
+//   players: Player[];
+// };
+
+export default function PlayersTable() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -83,32 +97,39 @@ export default function PlayersTable({
   const [deleteAlertTitle, setDeleteAlertTitle] = useState("");
   const [addAdminId, setAddAdminId] = useState("");
   const [deletedPlayer, setDeletedPlayer] = useState<Player | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    setPlayers(initialPlayers);
-  }, [initialPlayers]);
+    const fetchData = async () => {
+      try {
+        // Fetch list of players
+        const players = await PlayersList();
+        if (players.statusCode !== 500) {
+          setPlayers(players.filter((player: { name: string }) => player.name !== "Alis"));
+        } else {
+          console.error("Error fetching players:", players.message);
+        }
+        
+        // Fetch admin status
+        const adminCookie = await getCookie("admin");
+        if (adminCookie) {
+          setIsAdmin(JSON.parse(adminCookie));
+        }
 
-  useEffect(() => {
-    const fetchAdminStatus = async () => {
-      let fetchAdminStatus = await getCookie("admin");
-      if (fetchAdminStatus) {
-        let admin = JSON.parse(fetchAdminStatus);
-        setIsAdmin(admin);
+        // Fetch teams
+        const fetchedTeams = await TeamsList();
+        setTeams(fetchedTeams);
+        await setCookie("teams", JSON.stringify(fetchedTeams));
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
       }
     };
 
-    fetchAdminStatus();
-  }, []);
-
-  useEffect(() => {
-    const fetchTeams = async () => {
-      const fetchedTeams = await TeamsList();
-      setTeams(fetchedTeams);
-      await setCookie("teams", JSON.stringify(fetchedTeams));
-    };
-
-    fetchTeams();
+    fetchData();
   }, []);
 
   const handleTeamChange = async (playerId: string, newTeamId: string) => {
@@ -357,6 +378,11 @@ export default function PlayersTable({
       rowSelection,
     },
   });
+
+  if (loading) {
+    return <LoadingComponent />;
+  }
+
 
   return (
     <div className="w-full">
