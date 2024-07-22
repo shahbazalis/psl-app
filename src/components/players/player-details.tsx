@@ -25,7 +25,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { BidPlayerSchema } from "@/schema";
-import { Player } from "@/app/players/page";
+import { Player } from "./players-table";
 import { getCookie } from "@/lib/cookies";
 import { UpdatePlayer } from "@/app/server-actions/players-actions";
 import { Team } from "@/app/teams/page";

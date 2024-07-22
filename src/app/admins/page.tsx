@@ -4,7 +4,7 @@ import PageTitle from "@/components/PageTitle";
 import { useState, useEffect, Suspense, useMemo } from "react";
 import { AdminsList } from "../server-actions/admins-actions";
 
-import { Player } from "../players/page";
+import { Player } from "@/components/players/players-table";
 import AdminsTable from "@/components/admins/admins-table";
 import LoadingComponent from "@/components/loader";
 

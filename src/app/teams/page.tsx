@@ -6,7 +6,7 @@ import { TeamsList } from "@/app/server-actions/teams-actions";
 import TeamsTable from "@/components/teams/teams-table";
 import { getCookie } from "@/lib/cookies";
 import { TeamPlayers } from "@components/teams/team-players";
-import { Player } from "../players/page";
+import { Player } from "@/components/players/players-table";
 import LoadingComponent from "@/components/loader";
 export type Team = {
   id: string;

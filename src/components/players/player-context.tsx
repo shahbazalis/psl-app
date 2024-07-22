@@ -1,5 +1,5 @@
-import { createContext, useState, ReactNode, useContext } from "react";
-import { Player } from "@/app/players/page";
+import { createContext, useState, useContext } from "react";
+import { Player } from "./players-table";
 
 type PlayerContextType = {
   selectedPlayer: Player | null;

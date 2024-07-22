@@ -1,5 +1,5 @@
 "use server";
-import { Player } from "../players/page";
+import { Player } from "@/components/players/players-table";
 import { Resend } from "resend";
 import EmailTemplate from "@/components/email-template";
 import { getCookie } from "@/lib/cookies";

@@ -10,7 +10,7 @@ import { TeamsList } from "../server-actions/teams-actions";
 import { PlayersList } from "../server-actions/players-actions";
 
 import { Team } from "../teams/page";
-import { Player } from "../players/page";
+import { Player } from "@/components/players/players-table";
 import LoadingComponent from "@/components/loader";
 
 export default function Home() {
