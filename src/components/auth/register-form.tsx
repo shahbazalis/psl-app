@@ -134,15 +134,35 @@ const RegisterForm = () => {
             <FormField
               control={form.control}
               name="nationality"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nationality</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Pakistan" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Nationality</FormLabel>
+                    <FormControl>
+                      <Select
+                        {...field}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                        }}
+                        value={field.value}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger id="framework">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent position="popper">
+                          <SelectItem value="Afghanistan">Afghanistan</SelectItem>
+                          <SelectItem value="Bangladesh">Bangladesh</SelectItem>
+                          <SelectItem value="India">India</SelectItem>
+                          <SelectItem value="Pakistan">Pakistan</SelectItem>
+                          <SelectItem value="Srilanka">Srilanka</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
             <FormField
               control={form.control}
@@ -243,4 +263,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default RegisterForm;
