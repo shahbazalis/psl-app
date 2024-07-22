@@ -30,7 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Player } from "@/app/players/page";
+import { Player } from "../players/players-table";
 
 export type AdminsTableProps = {
   admins: Player[];

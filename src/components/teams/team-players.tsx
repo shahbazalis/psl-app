@@ -31,7 +31,7 @@ import {
 import { ArrowUpDown, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Team } from "@/app/teams/page";
-import { Player } from "@/app/players/page";
+import { Player } from "../players/players-table";
 import { getCookie } from "@/lib/cookies";
 
 export type TeamPlayersTableProps = {
