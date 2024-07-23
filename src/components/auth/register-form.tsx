@@ -67,14 +67,14 @@ const RegisterForm = () => {
       const emailResponse = await SendEmail(data);
       console.log("Email Response:", emailResponse);
     } else {
-      setErrorMessage(response.message);
+      setErrorMessage("Failed to create");
       setLoading(false);
     }
   };
 
   const handleRegistrationConfirmation = async () => {
     setShowDialog(false); // Close the dialog after confirmation
-    router.push("/auth/login");
+    router.push("/players");
   };
 
   const { pending } = useFormStatus();
@@ -151,7 +151,9 @@ const RegisterForm = () => {
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent position="popper">
-                          <SelectItem value="Afghanistan">Afghanistan</SelectItem>
+                          <SelectItem value="Afghanistan">
+                            Afghanistan
+                          </SelectItem>
                           <SelectItem value="Bangladesh">Bangladesh</SelectItem>
                           <SelectItem value="India">India</SelectItem>
                           <SelectItem value="Pakistan">Pakistan</SelectItem>
@@ -241,8 +243,11 @@ const RegisterForm = () => {
                 Registration Successful!
               </AlertDialogTitle>
               <AlertDialogDescription className="text-black text-lg font-medium Times New Roman">
-                You have successfully registered for PSL Tampere 2024. Get ready
-                for an exciting season ahead!
+                You have successfully registered as a player for PSL Tampere.
+                Please note that only management can grant admin access, and
+                players cannot log in as administrators. If you are granted
+                admin access, use your registration email and password to log
+                in. Thank you!
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
