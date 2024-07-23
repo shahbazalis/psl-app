@@ -65,6 +65,7 @@ import { PlayersList } from "@/app/server-actions/players-actions";
 import LoadingComponent from "@/components/loader";
 
 export type Player = {
+  admin: boolean;
   teamId: string;
   id: string;
   name: string;
@@ -294,7 +295,6 @@ export default function PlayersTable() {
         enableHiding: true,
         cell: ({ row }) => {
           const player = row.original;
-
           return (
             <div className="flex flex-row">
               <div>
@@ -305,7 +305,7 @@ export default function PlayersTable() {
                         variant="ghost"
                         className="flex items-center space-x-2"
                         onClick={() => handleDeletePlayer(player)}
-                        disabled={player.status === "SOLD"}
+                        disabled={player.status === "SOLD" || player.admin}
                       >
                         <UserRoundX className="h-5 w-5 text-red-700" />
                       </Button>
@@ -323,6 +323,7 @@ export default function PlayersTable() {
                       <Button
                         variant="ghost"
                         className="flex items-center space-x-2"
+                        disabled={player.admin}
                         onClick={() => handleAddAdmin(player.id)}
                       >
                         <UserPlus className="h-5 w-5 text-blue-700" />
