@@ -50,8 +50,10 @@ const LoginForm = () => {
       await setCookie("admin", response.admin);
       router.push("/dashboard");
     } else {
-      setShowDialog(true);
-      setErrorMessage(response.message);
+      if (response.message) setErrorMessage(response.message);
+      else {
+        setShowDialog(true);
+      }
       setLoading(false);
     }
   };

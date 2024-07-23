@@ -22,8 +22,8 @@ export const RegisterSchema = z
     nationality: z.string().min(3, {
       message: "Please enter your nationality",
     }),
-    role: z.enum(["","BATTER", "BOWLER", "ALLROUNDER"], {
-      message: "Role is required",
+    role: z.string().min(3, {
+      message: "Please enter your role",
     }),
     password: z.string().min(6, {
       message: "Password must be at least 6 characters long",
