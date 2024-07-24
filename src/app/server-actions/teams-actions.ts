@@ -1,8 +1,7 @@
 "use server";
 
-const backendURL= process.env.DATA_BASE_URL;
+const backendURL = process.env.DATA_BASE_URL;
 const baseURL = `${backendURL}/teams`;
-;
 import { getCookie } from "@/lib/cookies";
 export const TeamsList = async () => {
   try {
@@ -40,7 +39,7 @@ export const GetTeam = async (id: string) => {
   }
 };
 
-export const CreateTeam = async (name: string) => {
+export const CreateTeam = async (name: string, budget: number) => {
   try {
     const accessToken = await getCookie("accessToken");
     const response = await fetch(`${baseURL}/create`, {
@@ -49,7 +48,7 @@ export const CreateTeam = async (name: string) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name, budget }),
     });
 
     const data = await response.json();

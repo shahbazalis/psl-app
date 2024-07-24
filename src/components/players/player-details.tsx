@@ -28,6 +28,7 @@ import { BidPlayerSchema } from "@/schema";
 import { Player } from "./players-table";
 import { getCookie } from "@/lib/cookies";
 import { UpdatePlayer } from "@/app/server-actions/players-actions";
+import { TeamsList } from "@/app/server-actions/teams-actions";
 import { Team } from "@/app/teams/page";
 import { useRouter } from "next/navigation";
 import { AlertDialogComponent } from "../alert-dialog";
@@ -54,7 +55,7 @@ export default function PlayerDetail() {
     const getPlayerData = async () => {
       const playerDetails = await getCookie("player");
       setSelectedPlayer(JSON.parse(playerDetails));
-      const fetchedTeams = JSON.parse(await getCookie("teams"));
+      const fetchedTeams = await TeamsList();
       setTeams(
         fetchedTeams.filter((team: Team) => team.name !== "Default Team")
       );
@@ -62,6 +63,7 @@ export default function PlayerDetail() {
 
     getPlayerData();
   }, []);
+
   const handleFormSubmit = async (
     data: z.infer<typeof BidPlayerSchema>,
     action: string
@@ -83,7 +85,8 @@ export default function PlayerDetail() {
   const handleSoldConfirmation = async () => {
     if (selectedPlayer) {
       const [id] = form.getValues("team").split("|");
-      await UpdatePlayer(selectedPlayer.id, "SOLD", id);
+      const price = form.getValues('value');
+      await UpdatePlayer(selectedPlayer.id, "SOLD", id, price);
       router.push("/players");
     }
     setShowDialog(false); // Close the dialog after confirmation
@@ -143,7 +146,7 @@ export default function PlayerDetail() {
                             form.watch("team") && (
                               <p className="text-lg font-semibold leading-none mt-4">
                                 {selectedRadio} made a bid of {bidValue} for{" "}
-                                {selectedPlayer &&selectedPlayer.name}
+                                {selectedPlayer && selectedPlayer.name}
                               </p>
                             )}
                         </div>

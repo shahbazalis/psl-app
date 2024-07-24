@@ -99,6 +99,11 @@ export function TeamPlayers({ selectedTeam}: TeamPlayersTableProps) {
   if (isAdmin) {
     columns.push(
       {
+        accessorKey: "price",
+        header: "Price",
+        cell: ({ row }) => <div>{row.getValue("price")}</div>,
+      },
+      {
         accessorKey: "phoneNumber",
         header: "Phone Number",
         cell: ({ row }) => <div>{row.getValue("phoneNumber")}</div>,

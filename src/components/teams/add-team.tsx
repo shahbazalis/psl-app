@@ -36,11 +36,12 @@ export function AddTeamForm({ onClose, addNewTeam }: AddTeamFormProps) {
     resolver: zodResolver(AddTeamSchema),
     defaultValues: {
       name: "",
+      budget: 0,
     },
   });
   const handleSubmit = async (data: z.infer<typeof AddTeamSchema>) => {
-    const response = await CreateTeam(data.name);
-    if (response.name){
+    const response = await CreateTeam(data.name, data.budget);
+    if (response.name) {
       addNewTeam(response);
       onClose();
     }
@@ -58,6 +59,29 @@ export function AddTeamForm({ onClose, addNewTeam }: AddTeamFormProps) {
                 <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="Enter Team Name" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="budget"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Budget</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Enter Team Budget"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      form.setValue(
+                        "budget",
+                        parseFloat(e.target.value) || 0
+                      );
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -103,7 +127,7 @@ export default function AddTeam({ addNewTeam }: AddTeamProps) {
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <AddTeamForm onClose={handleDialogClose} addNewTeam={addNewTeam}/>
+          <AddTeamForm onClose={handleDialogClose} addNewTeam={addNewTeam} />
         </div>
       </DialogContent>
     </Dialog>

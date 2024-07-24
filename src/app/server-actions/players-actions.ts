@@ -98,7 +98,8 @@ export const DeletePlayer = async (id: string) => {
 export const UpdatePlayer = async (
   id: string,
   status?: string,
-  teamId?: string
+  teamId?: string,
+  price?: number
 ) => {
   try {
     const accessToken = await getCookie("accessToken");
@@ -108,7 +109,7 @@ export const UpdatePlayer = async (
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ status, teamId }),
+      body: JSON.stringify({ status, teamId, price }),
     });
     const data = await response.json();
     return data;

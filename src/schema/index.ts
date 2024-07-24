@@ -50,12 +50,14 @@ export const AddTeamSchema = z.object({
   name: z.string().min(1, {
     message: "Please enter the name for team",
   }),
+  budget:z.union([z.number().int(), z.number().refine(val => Number.isFinite(val) && !Number.isInteger(val), {
+    message: 'Value must be a finite float',
+  })])
 });
 
 export const BidPlayerSchema = z.object({
   value: z
     .number()
-    .int()
     .min(2, { message: "Please fill out this field with two digits" }),
   team: z.string().min(1, {
     message: "Please select the team",
