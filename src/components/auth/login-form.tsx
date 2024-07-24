@@ -48,7 +48,7 @@ const LoginForm = () => {
       setLoading(true);
       await setCookie("accessToken", response.token);
       await setCookie("admin", response.admin);
-      router.push("/dashboard");
+      router.push("/home");
     } else {
       if (response.message) setErrorMessage(response.message);
       else {

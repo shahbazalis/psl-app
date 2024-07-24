@@ -6,7 +6,7 @@ import { Nav } from "./ui/nav";
 
 type Props = {};
 
-import { LayoutDashboard, Users, ChevronRight } from "lucide-react";
+import { LayoutDashboard, Users, ChevronRight, HomeIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
 import { getCookie } from "@/lib/cookies";
@@ -43,9 +43,9 @@ export default function SideNavbar({}: Props) {
 
   const links = [
     {
-      title: "Dashboard",
-      href: "/dashboard",
-      icon: LayoutDashboard,
+      title: "Home",
+      href: "/home",
+      icon: HomeIcon,
       variant: "default" as "default",
     },
     {
@@ -64,6 +64,12 @@ export default function SideNavbar({}: Props) {
 
   if (isAdmin) {
     links.splice(1, 0, {
+      title: "Dashboard",
+      href: "/dashboard",
+      icon: LayoutDashboard,
+      variant: "ghost" as "ghost",
+    });
+    links.splice(2, 0, {
       title: "Admins",
       href: "/admins",
       icon: Users,

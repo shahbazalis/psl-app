@@ -25,7 +25,7 @@ const Navbar = () => {
   return (
     <nav className="sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all bg-slate-200">
       <MaxWidthWrapper>
-        <div className="flex h-14 items-center justify-between">
+        <div className="flex h-14 items-center justify-between space-x-4">
           <div className="flex z-40 font-semibold">
             PSL<span className="text-green-500">Tampere</span>
           </div>
@@ -52,6 +52,18 @@ const Navbar = () => {
                     disabled={accessToken}
                   >
                     Register as Player
+                  </MenubarTrigger>
+                </Link>
+              </MenubarMenu>
+              <MenubarMenu>
+                <Link href="/home">
+                  <MenubarTrigger
+                    className={
+                      accessToken ? "opacity-50 cursor-not-allowed" : ""
+                    }
+                    disabled={accessToken}
+                  >
+                    Home
                   </MenubarTrigger>
                 </Link>
               </MenubarMenu>
