@@ -11,6 +11,7 @@ import LoadingComponent from "@/components/loader";
 export type Team = {
   id: string;
   name: string;
+  budget: number;
   players: Player[];
 };
 

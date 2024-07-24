@@ -57,7 +57,7 @@ import {
   UpdatePlayer,
   DeletePlayer,
 } from "@/app/server-actions/players-actions";
-import { TeamsList } from "@/app/server-actions/teams-actions";
+import { TeamsList, UpdateTeam } from "@/app/server-actions/teams-actions";
 import { setCookie, getCookie } from "@/lib/cookies";
 import { Team } from "@/app/teams/page";
 import { AlertDialogComponent } from "@/components/alert-dialog";
@@ -65,6 +65,7 @@ import { PlayersList } from "@/app/server-actions/players-actions";
 import LoadingComponent from "@/components/loader";
 
 export type Player = {
+  price: number;
   admin: boolean;
   teamId: string;
   id: string;
@@ -78,11 +79,6 @@ export type Player = {
   password?: string;
   confirmPassword?: string;
 };
-
-
-// type PlayersTableProps = {
-//   players: Player[];
-// };
 
 export default function PlayersTable() {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -107,11 +103,13 @@ export default function PlayersTable() {
         // Fetch list of players
         const players = await PlayersList();
         if (players.statusCode !== 500) {
-          setPlayers(players.filter((player: { name: string }) => player.name !== "Alis"));
+          setPlayers(
+            players.filter((player: { name: string }) => player.name !== "Alis")
+          );
         } else {
           console.error("Error fetching players:", players.message);
         }
-        
+
         // Fetch admin status
         const adminCookie = await getCookie("admin");
         if (adminCookie) {
@@ -121,7 +119,6 @@ export default function PlayersTable() {
         // Fetch teams
         const fetchedTeams = await TeamsList();
         setTeams(fetchedTeams);
-        await setCookie("teams", JSON.stringify(fetchedTeams));
 
         setLoading(false);
       } catch (error) {
@@ -134,8 +131,26 @@ export default function PlayersTable() {
   }, []);
 
   const handleTeamChange = async (playerId: string, newTeamId: string) => {
+    const player = players.find((p) => p.id === playerId);
+    if (!player) return;
+
+    // Fetch the selected team
     const selectedTeam = teams.find((team) => team.id === newTeamId);
     const newStatus = selectedTeam?.name === "Default Team" ? "UNSOLD" : "SOLD";
+    const price = player.price; // Assuming price is a property of Player
+
+    // Get the team the player is leaving
+    const oldTeamId = player.teamId;
+    const oldTeam = teams.find((team) => team.id === oldTeamId);
+
+    // Update the player's team and status
+    await UpdatePlayer(playerId, newStatus, newTeamId);
+
+    // Update the old team's budget if moving to "No Team"
+    if (newStatus === "UNSOLD" && oldTeam) {
+      const updatedOldTeamBudget = oldTeam.budget + price;
+      await UpdateTeam(oldTeamId, updatedOldTeamBudget);
+    }
 
     await UpdatePlayer(playerId, newStatus, newTeamId);
 
@@ -238,7 +253,9 @@ export default function PlayersTable() {
         const teamId: string = row.original.teamId;
         return isAdmin ? (
           <Select
-            onValueChange={(newTeamId) => handleTeamChange(row.original.id, newTeamId)}
+            onValueChange={(newTeamId) =>
+              handleTeamChange(row.original.id, newTeamId)
+            }
             value={teamId}
             disabled={!isAdmin}
           >
@@ -257,7 +274,11 @@ export default function PlayersTable() {
             </SelectContent>
           </Select>
         ) : (
-          <span>{row.original.team.name === "Default Team" ? "No Team" : row.original.team.name }</span>
+          <span>
+            {row.original.team.name === "Default Team"
+              ? "No Team"
+              : row.original.team.name}
+          </span>
         );
       },
     },
@@ -383,7 +404,6 @@ export default function PlayersTable() {
   if (loading) {
     return <LoadingComponent />;
   }
-
 
   return (
     <div className="w-full">

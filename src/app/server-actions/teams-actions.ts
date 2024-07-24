@@ -58,6 +58,25 @@ export const CreateTeam = async (name: string, budget: number) => {
   }
 };
 
+export const UpdateTeam = async (id: string, budget: number) => {
+  try {
+    const accessToken = await getCookie("accessToken");
+    const response = await fetch(`${baseURL}/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ budget }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    console.log("error:", error);
+    return error;
+  }
+};
+
 export const DeleteTeam = async (id: string) => {
   try {
     const accessToken = await getCookie("accessToken");

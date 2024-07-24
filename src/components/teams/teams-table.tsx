@@ -171,6 +171,7 @@ export default function TeamsTable({
                   variant="ghost"
                   className="flex items-center space-x-2"
                   onClick={() => handleDeleteTeam(teamForDeletion.id)}
+                  disabled={teamForDeletion.players.length > 0}
                 >
                   <Trash2 className="h-6 w-6 text-red-700" />
                 </Button>
