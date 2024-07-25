@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { CircleUserRound } from "lucide-react";
+import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
@@ -83,10 +84,12 @@ export default function PlayerDetail() {
         setSelectedRadio(name);
         setBidValue(data.value);
         setIsSubmitted(true);
-        setDisableSoldBtn(false)
+        setDisableSoldBtn(false);
         setErrorMessage(""); // Clear any previous error message
       } else {
-        setErrorMessage("Team budget is less than bid value, so the team cannot buy the player.");
+        setErrorMessage(
+          "Team budget is less than bid value, so the team cannot buy the player."
+        );
         setDisableSoldBtn(true);
       }
     } else if (action === "sold") {
@@ -124,7 +127,15 @@ export default function PlayerDetail() {
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className="flex items-center space-x-4 rounded-md border p-4">
-          <CircleUserRound className="h-24 w-24" />
+          {selectedPlayer && (
+            <Image
+              className="w-48 h-48 rounded-full border-4 border-white shadow-lg mr-8"
+              src={`/players/${selectedPlayer.name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase()}.jpg`}
+              alt={selectedPlayer.name}
+              width={192}
+              height={192}
+            />
+          )}
           <div className="flex-1 space-y-1">
             <p className="text-sm font-medium leading-none">
               {selectedPlayer && selectedPlayer.name}

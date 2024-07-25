@@ -370,7 +370,7 @@ export default function PlayersTable() {
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Open Player Details</p>
+                      <p>Bid for a Player</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
