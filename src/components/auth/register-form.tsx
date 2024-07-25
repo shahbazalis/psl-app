@@ -46,6 +46,8 @@ const RegisterForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
   const [showDialog, setShowDialog] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -54,18 +56,27 @@ const RegisterForm = () => {
       phoneNumber: "",
       nationality: "",
       role: "",
+      image: null,
       password: "",
       confirmPassword: "",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
-    const response = await PlayerRegistration(data);
+    if (!selectedFile) {
+      setErrorMessage("Please upload an image");
+      return;
+    }
+    const fileData = new FormData();
+    fileData.set("file", selectedFile);
+
+    setLoading(true);
+
+    const response = await PlayerRegistration(data, fileData);
     if (response.email) {
       setLoading(true);
       setShowDialog(true);
-      const emailResponse = await SendEmail(data);
-      console.log("Email Response:", emailResponse);
+      await SendEmail(data);
     } else {
       setErrorMessage("Failed to create");
       setLoading(false);
@@ -75,6 +86,17 @@ const RegisterForm = () => {
   const handleRegistrationConfirmation = async () => {
     setShowDialog(false); // Close the dialog after confirmation
     router.push("/players");
+  };
+
+  const handleFileChange = (e: any) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 500 * 1024) {
+        setErrorMessage("File size exceeds 500KB");
+        return;
+      }
+    }
+    setSelectedFile(file);
   };
 
   const { pending } = useFormStatus();
@@ -199,6 +221,24 @@ const RegisterForm = () => {
                 );
               }}
             />
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mr-10">Upload Image</FormLabel>
+                  <FormControl>
+                    <input type="file" onChange={handleFileChange} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div>
+              <span className="text-red-600 font-extrabold uppercase italic shadow-lg">
+                Image Type should be JPG
+              </span>
+            </div>
             <FormField
               control={form.control}
               name="password"

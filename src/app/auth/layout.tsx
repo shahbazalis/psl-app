@@ -9,7 +9,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
       />
       <div className="w-1/2 flex flex-col ">
         <Navbar />
-        <div className="h-screen flex items-center justify-center overflow-auto">{children}</div>
+        <div className=" flex flex-grow items-center justify-center overflow-auto">{children}</div>
       </div>
     </section>
   );

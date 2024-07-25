@@ -41,7 +41,6 @@ import { getCookie } from "@/lib/cookies";
 import { Team } from "@/app/teams/page";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
-
 import { AlertDialogComponent } from "@/components/alert-dialog";
 
 export type TeamsTableProps = {
@@ -147,6 +146,13 @@ export default function TeamsTable({
       },
       cell: ({ row }) => (
         <div className="capitalize">{row.getValue("name")}</div>
+      ),
+    },
+    {
+      accessorKey: "budget",
+      header: "Budget",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("budget")}</div>
       ),
     },
   ];

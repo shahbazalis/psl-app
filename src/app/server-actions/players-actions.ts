@@ -3,8 +3,9 @@ import { Player } from "@/components/players/players-table";
 import { Resend } from "resend";
 import EmailTemplate from "@/components/email-template";
 import { getCookie } from "@/lib/cookies";
+import { writeFile } from "fs/promises";
 
-const backendURL= process.env.DATA_BASE_URL;
+const backendURL = process.env.DATA_BASE_URL;
 const baseURL = `${backendURL}/players`;
 
 export const SendEmail = async (props: Partial<Player>) => {
@@ -31,13 +32,17 @@ export const SendEmail = async (props: Partial<Player>) => {
   }
 };
 
-export const PlayerRegistration = async (props: Partial<Player>) => {
-  const email = props.email;
-  const name = props.name;
-  const phoneNumber = props.phoneNumber;
-  const nationality = props.nationality;
-  const role = props.role;
-  const password = props.password;
+export const PlayerRegistration = async (
+  props: Partial<Player>,
+  fileData: any
+) => {
+  const { email, name, phoneNumber, nationality, role, password } = props;
+
+  const file = fileData.get("file");
+
+  if (!file) {
+    return { message: "no image found", success: false };
+  }
 
   try {
     const accessToken = await getCookie("accessToken");
@@ -57,8 +62,25 @@ export const PlayerRegistration = async (props: Partial<Player>) => {
       }),
     });
     const data = await response.json();
+
+    // Extracting file extension and setting the new file name
+    let newFileName = ""
+    const originalFileName = file.name;
+    const fileExtension = originalFileName.split(".").pop();
+    if(name) {
+      const sanitizedPlayerName = name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+      newFileName = `${sanitizedPlayerName}.${fileExtension}`;
+    }
+    // uploading image file
+    const byteData = await file.arrayBuffer();
+    const buffer = Buffer.from(byteData);
+    const path = `./public/players/${newFileName}`;
+    await writeFile(path, buffer);
+
+    // returning data
     return data;
   } catch (error: any) {
+    console.log("error:", error);
     return error;
   }
 };
@@ -98,7 +120,8 @@ export const DeletePlayer = async (id: string) => {
 export const UpdatePlayer = async (
   id: string,
   status?: string,
-  teamId?: string
+  teamId?: string,
+  price?: number
 ) => {
   try {
     const accessToken = await getCookie("accessToken");
@@ -108,7 +131,7 @@ export const UpdatePlayer = async (
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ status, teamId }),
+      body: JSON.stringify({ status, teamId, price }),
     });
     const data = await response.json();
     return data;

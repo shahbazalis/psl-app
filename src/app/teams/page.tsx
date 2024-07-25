@@ -11,6 +11,7 @@ import LoadingComponent from "@/components/loader";
 export type Team = {
   id: string;
   name: string;
+  budget: number;
   players: Player[];
 };
 
@@ -76,7 +77,7 @@ export default function Teams() {
         {isAdmin && <AddTeam addNewTeam={addNewTeam} />}
       </div>
       <Suspense fallback={<p>Loading Teams...</p>}>
-      <section className="grid grid-cols-1 gap-8 transition-all lg:grid-cols-[35%_65%]">
+      <section className="grid grid-cols-1 gap-8 transition-all lg:grid-cols-[40%_60%]">
           {memoizedTeamsTable}
           {selectedTeam && <TeamPlayers selectedTeam={selectedTeam} />}
         </section>
