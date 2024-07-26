@@ -148,41 +148,43 @@ export default function TeamsTable({
         <div className="capitalize">{row.getValue("name")}</div>
       ),
     },
-    {
-      accessorKey: "budget",
-      header: "Budget",
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("budget")}</div>
-      ),
-    },
   ];
   if (component !== "Dashboard" && isAdmin) {
-    columns.push({
-      accessorKey: "actions",
-      header: "Actions",
-      enableHiding: true,
-      cell: ({ row }) => {
-        const teamForDeletion = row.original;
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="flex items-center space-x-2"
-                  onClick={() => handleDeleteTeam(teamForDeletion.id)}
-                >
-                  <Trash2 className="h-6 w-6 text-red-700" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Delete Team</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        );
+    columns.push(
+      {
+        accessorKey: "budget",
+        header: "Budget",
+        cell: ({ row }) => (
+          <div className="capitalize">{row.getValue("budget")}</div>
+        ),
       },
-    });
+      {
+        accessorKey: "actions",
+        header: "Actions",
+        enableHiding: true,
+        cell: ({ row }) => {
+          const teamForDeletion = row.original;
+          return (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="flex items-center space-x-2"
+                    onClick={() => handleDeleteTeam(teamForDeletion.id)}
+                  >
+                    <Trash2 className="h-6 w-6 text-red-700" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Delete Team</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          );
+        },
+      }
+    );
   }
 
   const table = useReactTable({

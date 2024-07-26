@@ -127,7 +127,8 @@ export default function PlayerDetail() {
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className="flex items-center space-x-4 rounded-md border p-4">
-          {selectedPlayer && (
+          <CircleUserRound className="w-24 h-24 rounded-full border-4 border-white shadow-lg mr-8"/>
+          {/* {selectedPlayer && (
             <Image
               className="w-48 h-48 rounded-full border-4 border-white shadow-lg mr-8"
               src={`/players/${selectedPlayer.name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase()}.jpg`}
@@ -135,7 +136,7 @@ export default function PlayerDetail() {
               width={192}
               height={192}
             />
-          )}
+          )} */}
           <div className="flex-1 space-y-1">
             <p className="text-sm font-medium leading-none">
               {selectedPlayer && selectedPlayer.name}

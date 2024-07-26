@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { deleteCookies, getCookie } from "@/lib/cookies";
 import Link from "next/link";
-import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
 
 const Navbar = () => {
   const router = useRouter();
@@ -32,64 +39,33 @@ const Navbar = () => {
           <div className="flex-grow flex justify-end">
             <Menubar>
               <MenubarMenu>
-                <Link href="/auth/login">
-                  <MenubarTrigger
-                    className={
-                      accessToken ? "opacity-50 cursor-not-allowed" : ""
-                    }
-                    disabled={accessToken}
-                  >
-                    Login as Admin
-                  </MenubarTrigger>
-                </Link>
-              </MenubarMenu>
-              <MenubarMenu>
-                <Link href="/auth/register">
-                  <MenubarTrigger
-                    className={
-                      accessToken ? "opacity-50 cursor-not-allowed" : ""
-                    }
-                    disabled={accessToken}
-                  >
-                    Register as Player
-                  </MenubarTrigger>
-                </Link>
-              </MenubarMenu>
-              <MenubarMenu>
-                <Link href="/home">
-                  <MenubarTrigger
-                    className={
-                      accessToken ? "opacity-50 cursor-not-allowed" : ""
-                    }
-                    disabled={accessToken}
-                  >
-                    Home
-                  </MenubarTrigger>
-                </Link>
-              </MenubarMenu>
-              <MenubarMenu>
-                <Link href="/players">
-                  <MenubarTrigger
-                    className={
-                      accessToken ? "opacity-50 cursor-not-allowed" : ""
-                    }
-                    disabled={accessToken}
-                  >
-                    Players
-                  </MenubarTrigger>
-                </Link>
-              </MenubarMenu>
-              <MenubarMenu>
-                <Link href="/teams">
-                  <MenubarTrigger
-                    className={
-                      accessToken ? "opacity-50 cursor-not-allowed" : ""
-                    }
-                    disabled={accessToken}
-                  >
-                    Teams
-                  </MenubarTrigger>
-                </Link>
+                <MenubarTrigger
+                  className={accessToken ? "opacity-50 cursor-not-allowed" : ""}
+                  disabled={accessToken}
+                >
+                  Views
+                </MenubarTrigger>
+                <MenubarContent>
+                  <MenubarItem>
+                    <Link href="/auth/login">Login as Admin</Link>
+                  </MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem>
+                    <Link href="/auth/register">Register as Player</Link>
+                  </MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem>
+                    <Link href="/home">Home</Link>
+                  </MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem>
+                    <Link href="/players">Players</Link>
+                  </MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem>
+                    <Link href="/teams">Teams</Link>
+                  </MenubarItem>
+                </MenubarContent>
               </MenubarMenu>
               <MenubarMenu>
                 <MenubarTrigger

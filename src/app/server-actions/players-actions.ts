@@ -64,18 +64,18 @@ export const PlayerRegistration = async (
     const data = await response.json();
 
     // Extracting file extension and setting the new file name
-    let newFileName = ""
-    const originalFileName = file.name;
-    const fileExtension = originalFileName.split(".").pop();
-    if(name) {
-      const sanitizedPlayerName = name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-      newFileName = `${sanitizedPlayerName}.${fileExtension}`;
-    }
-    // uploading image file
-    const byteData = await file.arrayBuffer();
-    const buffer = Buffer.from(byteData);
-    const path = `./public/players/${newFileName}`;
-    await writeFile(path, buffer);
+    // let newFileName = ""
+    // const originalFileName = file.name;
+    // const fileExtension = originalFileName.split(".").pop();
+    // if(name) {
+    //   const sanitizedPlayerName = name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+    //   newFileName = `${sanitizedPlayerName}.${fileExtension}`;
+    // }
+    // // uploading image file
+    // const byteData = await file.arrayBuffer();
+    // const buffer = Buffer.from(byteData);
+    // const path = `./public/players/${newFileName}`;
+    // await writeFile(path, buffer);
 
     // returning data
     return data;

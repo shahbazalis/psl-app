@@ -40,26 +40,31 @@ export default function Home() {
   return (
     <div className="w-full h-screen overflow-auto">
       <PageTitle title="Home" />
+      <Image
+        //className="w-full h-64 sm:h-80 md:h-96 lg:h-[28rem] xl:h-[32rem] bg-cover bg-center"
+        //className="w-full h-48 sm:h-64 md:h-72 lg:h-[24rem] xl:h-[28rem] object-cover"
+        className="h-1/3 object-cover"
+        src="/images/banner.png"
+        alt="banner"
+        layout="responsive"
+        width={1280}
+        height={720}
+      />
 
-      <div
-        className="w-full h-1/2 bg-cover bg-center"
-        style={{ backgroundImage: "url(/images/banner.png)" }}
-      ></div>
-
-      <section className="grid w-full grid-cols-1 gap-4 mt-4 lg:grid-cols-4 overflow-auto">
+      <section className="grid w-full grid-cols-1 gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 overflow-auto">
         {teams.map((team) => (
           <div key={team.id} className="space-y-8 overflow-auto">
             <Card onClick={() => router.push("/teams")}>
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Image
-                    className="w-32 h-32 rounded-full border-4 border-white shadow-lg mr-8"
-                    src={`/teams/${team.name.replace(/\s+/g, '-')}.jpg`}
+                    className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full border-4 border-white shadow-lg mr-4 sm:mr-6 md:mr-8"
+                    src={`/teams/${team.name.replace(/\s+/g, "-")}.jpg`}
                     alt={team.name}
-                    width={128} 
+                    width={128}
                     height={128}
                   />
-                  <span className="text-black align-items justify-center">
+                  <span className="text-black align-items justify-center text-sm sm:text-base md:text-lg lg:text-xl">
                     {team.name}
                   </span>
                 </CardTitle>

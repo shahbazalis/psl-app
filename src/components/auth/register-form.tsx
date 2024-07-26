@@ -88,16 +88,16 @@ const RegisterForm = () => {
     router.push("/players");
   };
 
-  const handleFileChange = (e: any) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 500 * 1024) {
-        setErrorMessage("File size exceeds 500KB");
-        return;
-      }
-    }
-    setSelectedFile(file);
-  };
+  // const handleFileChange = (e: any) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     if (file.size > 500 * 1024) {
+  //       setErrorMessage("File size exceeds 500KB");
+  //       return;
+  //     }
+  //   }
+  //   setSelectedFile(file);
+  // };
 
   const { pending } = useFormStatus();
   return (
@@ -221,7 +221,7 @@ const RegisterForm = () => {
                 );
               }}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="image"
               render={({ field }) => (
@@ -238,7 +238,7 @@ const RegisterForm = () => {
               <span className="text-red-600 font-extrabold uppercase italic shadow-lg">
                 Image Type should be JPG
               </span>
-            </div>
+            </div> */}
             <FormField
               control={form.control}
               name="password"
