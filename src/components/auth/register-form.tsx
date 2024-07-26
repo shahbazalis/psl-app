@@ -63,16 +63,17 @@ const RegisterForm = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
-    if (!selectedFile) {
-      setErrorMessage("Please upload an image");
-      return;
-    }
-    const fileData = new FormData();
-    fileData.set("file", selectedFile);
+    // if (!selectedFile) {
+    //   setErrorMessage("Please upload an image");
+    //   return;
+    // }
+    // const fileData = new FormData();
+    // fileData.set("file", selectedFile);
 
-    setLoading(true);
+    // setLoading(true);
 
-    const response = await PlayerRegistration(data, fileData);
+    // const response = await PlayerRegistration(data, fileData);
+    const response = await PlayerRegistration(data);
     if (response.email) {
       setLoading(true);
       setShowDialog(true);
@@ -178,6 +179,7 @@ const RegisterForm = () => {
                           </SelectItem>
                           <SelectItem value="Bangladesh">Bangladesh</SelectItem>
                           <SelectItem value="India">India</SelectItem>
+                          <SelectItem value="Nepal">Nepal</SelectItem>
                           <SelectItem value="Pakistan">Pakistan</SelectItem>
                           <SelectItem value="Srilanka">Srilanka</SelectItem>
                         </SelectContent>

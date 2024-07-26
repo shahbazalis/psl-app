@@ -34,15 +34,14 @@ export const SendEmail = async (props: Partial<Player>) => {
 
 export const PlayerRegistration = async (
   props: Partial<Player>,
-  fileData: any
 ) => {
   const { email, name, phoneNumber, nationality, role, password } = props;
 
-  const file = fileData.get("file");
+  // const file = fileData.get("file");
 
-  if (!file) {
-    return { message: "no image found", success: false };
-  }
+  // if (!file) {
+  //   return { message: "no image found", success: false };
+  // }
 
   try {
     const accessToken = await getCookie("accessToken");
