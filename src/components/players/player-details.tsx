@@ -127,7 +127,7 @@ export default function PlayerDetail() {
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className="flex items-center space-x-4 rounded-md border p-4">
-          <CircleUserRound className="w-24 h-24 rounded-full border-4 border-white shadow-lg mr-8"/>
+          <CircleUserRound className="w-24 h-24 rounded-full border-4 border-white shadow-lg mr-8" />
           {/* {selectedPlayer && (
             <Image
               className="w-48 h-48 rounded-full border-4 border-white shadow-lg mr-8"
@@ -162,11 +162,11 @@ export default function PlayerDetail() {
                     <FormItem>
                       <FormLabel>Bid Value</FormLabel>
                       <FormControl>
-                        <div className="flex items-center space-x-60">
+                        <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-60">
                           <Input
                             {...field}
                             placeholder="Enter The Amount"
-                            className="w-1/5"
+                            className="w-full md:w-1/5"
                             onChange={(e) => {
                               field.onChange(e);
                               form.setValue(
@@ -178,7 +178,7 @@ export default function PlayerDetail() {
                           {isSubmitted &&
                             form.watch("value") > 0 &&
                             form.watch("team") && (
-                              <p className="text-lg font-semibold leading-none mt-4">
+                              <p className="text-lg font-semibold leading-none mt-4 md:mt-0">
                                 {selectedRadio} made a bid of {bidValue} for{" "}
                                 {selectedPlayer && selectedPlayer.name}
                               </p>

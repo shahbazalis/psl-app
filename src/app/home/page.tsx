@@ -43,7 +43,7 @@ export default function Home() {
       <Image
         //className="w-full h-64 sm:h-80 md:h-96 lg:h-[28rem] xl:h-[32rem] bg-cover bg-center"
         //className="w-full h-48 sm:h-64 md:h-72 lg:h-[24rem] xl:h-[28rem] object-cover"
-        className="h-1/3 object-cover"
+        //className="h-1/3 object-cover"
         src="/images/banner.png"
         alt="banner"
         layout="responsive"
@@ -51,9 +51,9 @@ export default function Home() {
         height={720}
       />
 
-      <section className="grid w-full grid-cols-1 gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 overflow-auto">
+      <section className="grid w-full grid-cols-1 gap-4 mt-4 mb-24 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 overflow-auto">
         {teams.map((team) => (
-          <div key={team.id} className="space-y-8 overflow-auto">
+          <div key={team.id} className="overflow-auto">
             <Card onClick={() => router.push("/teams")}>
               <CardHeader>
                 <CardTitle className="flex items-center">
