@@ -75,7 +75,7 @@ export type Player = {
   phoneNumber: string;
   nationality: string;
   status: "SOLD" | "UNSOLD";
-  durl: string;
+  url: string;
   team: { name: string };
   password?: string;
   confirmPassword?: string;

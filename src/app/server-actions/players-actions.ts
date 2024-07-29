@@ -3,7 +3,6 @@ import { Player } from "@/components/players/players-table";
 import { Resend } from "resend";
 import EmailTemplate from "@/components/email-template";
 import { getCookie } from "@/lib/cookies";
-import { writeFile } from "fs/promises";
 import { getSignedURL } from "./s3-bucket-actions";
 
 const backendURL = process.env.DATA_BASE_URL;

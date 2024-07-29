@@ -116,9 +116,6 @@ export default function PlayerDetail() {
       router.push("/players");
     }
   };
-  if (selectedPlayer) {
-    console.log("url:", selectedPlayer.url);
-  }
 
   return (
     <Card className="w-full">
