@@ -75,6 +75,7 @@ export type Player = {
   phoneNumber: string;
   nationality: string;
   status: "SOLD" | "UNSOLD";
+  durl: string;
   team: { name: string };
   password?: string;
   confirmPassword?: string;
@@ -326,7 +327,7 @@ export default function PlayersTable() {
                         variant="ghost"
                         className="flex items-center space-x-2"
                         onClick={() => handleDeletePlayer(player)}
-                        disabled={player.status === "SOLD" || player.admin}
+                        disabled={player.status === "SOLD"} // || player.admin
                       >
                         <UserRoundX className="h-5 w-5 text-red-700" />
                       </Button>

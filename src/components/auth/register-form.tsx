@@ -63,23 +63,22 @@ const RegisterForm = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
-    // if (!selectedFile) {
-    //   setErrorMessage("Please upload an image");
-    //   return;
-    // }
-    // const fileData = new FormData();
-    // fileData.set("file", selectedFile);
-
-    // setLoading(true);
-
-    // const response = await PlayerRegistration(data, fileData);
-    const response = await PlayerRegistration(data);
+    if (!selectedFile) {
+      setErrorMessage("Please upload an image");
+      setLoading(false);
+      return;
+    }
+    const fileData = new FormData();
+    fileData.set("file", selectedFile);
+    setLoading(true);
+    
+    const response = await PlayerRegistration(data, fileData);
     if (response.email) {
-      setLoading(true);
+      setLoading(false);
       setShowDialog(true);
       await SendEmail(data);
     } else {
-      setErrorMessage("Failed to create");
+      setErrorMessage(response.message);
       setLoading(false);
     }
   };
@@ -89,16 +88,16 @@ const RegisterForm = () => {
     router.push("/players");
   };
 
-  // const handleFileChange = (e: any) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     if (file.size > 500 * 1024) {
-  //       setErrorMessage("File size exceeds 500KB");
-  //       return;
-  //     }
-  //   }
-  //   setSelectedFile(file);
-  // };
+  const handleFileChange = (e: any) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 500 * 1024) {
+        setErrorMessage("File size exceeds 500KB");
+        return;
+      }
+    }
+    setSelectedFile(file);
+  };
 
   const { pending } = useFormStatus();
   return (
@@ -223,7 +222,7 @@ const RegisterForm = () => {
                 );
               }}
             />
-            {/* <FormField
+            <FormField
               control={form.control}
               name="image"
               render={({ field }) => (
@@ -240,7 +239,7 @@ const RegisterForm = () => {
               <span className="text-red-600 font-extrabold uppercase italic shadow-lg">
                 Image Type should be JPG
               </span>
-            </div> */}
+            </div>
             <FormField
               control={form.control}
               name="password"
@@ -248,7 +247,7 @@ const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} type="password" placeholder="" />
+                    <Input {...field} type="password" placeholder="******" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -261,7 +260,7 @@ const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
-                    <Input {...field} type="password" placeholder="" />
+                    <Input {...field} type="password" placeholder="******" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
