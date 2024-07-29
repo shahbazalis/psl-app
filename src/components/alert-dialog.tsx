@@ -28,7 +28,7 @@ export function AlertDialogComponent({
 }: AlertDialogProps) {
   return (
     <AlertDialog open={showDialog} onOpenChange={onClose}>
-      <AlertDialogContent className="w-full max-w-md p-4 sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto">
+      <AlertDialogContent className="w-full max-w-xs p-4 sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-xl sm:text-2xl md:text-3xl">
             {title}
@@ -41,16 +41,16 @@ export function AlertDialogComponent({
           {!registration && (
             <AlertDialogCancel
               onClick={onClose}
-              className="px-4 py-2 text-base sm:text-lg"
+              className="px-2 py-1 text-sm sm:px-3 sm:py-1.5 sm:text-base md:px-4 md:py-2 md:text-lg"
             >
               Cancel
             </AlertDialogCancel>
           )}
           <AlertDialogAction
             onClick={handleConfirmation}
-            className="px-4 py-2 text-base sm:text-lg bg-green-600 text-white hover:bg-lime-500"
+            className="px-2 py-1 text-sm sm:px-3 sm:py-1.5 sm:text-base md:px-4 md:py-2 md:text-lg bg-green-600 text-white hover:bg-lime-500"
           >
-            Ok
+            Confirm
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

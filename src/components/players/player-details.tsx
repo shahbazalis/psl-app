@@ -126,19 +126,19 @@ export default function PlayerDetail() {
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
-        <div className="flex items-center space-x-4 rounded-md border p-4">
-          {/* <CircleUserRound className="w-24 h-24 rounded-full border-4 border-white shadow-lg mr-8" /> */}
+        {/* <CircleUserRound className="w-24 h-24 rounded-full border-4 border-white shadow-lg mr-8" /> */}
+        <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 rounded-md border p-4">
           {selectedPlayer && (
             <Image
-              className="w-48 h-48 rounded-full border-4 border-white shadow-lg mr-8"
+              className="w-24 h-24 sm:w-48 sm:h-48 rounded-full border-4 border-white shadow-lg sm:mr-8"
               src={selectedPlayer.url}
               alt={selectedPlayer.name}
               unoptimized={true}
-              width={192}
-              height={192}
+              width={96} 
+              height={96}
             />
           )}
-          <div className="flex-1 space-y-1">
+          <div className="flex-1 space-y-1 text-center sm:text-left">
             <p className="text-sm font-medium leading-none">
               {selectedPlayer && selectedPlayer.name}
             </p>
@@ -147,6 +147,7 @@ export default function PlayerDetail() {
             </p>
           </div>
         </div>
+
         <div>
           <Form {...form}>
             <form
@@ -229,17 +230,17 @@ export default function PlayerDetail() {
                 <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
               )}
               <input type="hidden" {...form.register("action")} />
-              <div className="flex justify-between">
+              <div className="flex justify-between space-x-2">
                 <Button
                   type="submit"
-                  className="bg-sky-600"
+                  className="bg-sky-600 px-2 py-1 text-sm sm:px-4 sm:py-2 sm:text-base"
                   onClick={() => form.setValue("action", "bid")}
                 >
                   Bid for Player
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-red-600"
+                  className="bg-red-600 px-2 py-1 text-sm sm:px-4 sm:py-2 sm:text-base"
                   onClick={() => form.setValue("action", "sold")}
                   disabled={bidValue <= 0 || disableSoldBtn}
                 >
