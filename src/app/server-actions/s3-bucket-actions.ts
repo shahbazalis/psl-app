@@ -21,12 +21,7 @@ type GetSignedURLParams = {
   fileSize: number
 }
 
-const maxFileSize = 1048576 * 10 // 1 MB
-console.log("Process:",process.env);
-
-console.log("AWS Access Key:", process.env.AWS_ACCESS_KEY_ID);
-console.log("AWS Secret Key:", process.env.AWS_SECRET_ACCESS_KEY);
-console.log("AWS Region:", process.env.AWS_REGION);
+const maxFileSize = 1048576 * 50 // 1 MB
 const s3Client = new S3Client({
   region: process.env.AWS_REGION!,
   credentials: {
@@ -34,13 +29,6 @@ const s3Client = new S3Client({
     secretAccessKey:process.env.AWS_SECRET_ACCESS_KEY!,
   },
 });
-// const s3Client = new S3Client({
-//   region: process.env.AWS_BUCKET_REGION!,
-//   credentials: {
-//     accessKeyId: process.env.AWS_ACCESS_KEY!,
-//     secretAccessKey: process.env.AWS_SECRET_KEY!,
-//   },
-// });
 
 export async function getSignedURL({
   fileName,

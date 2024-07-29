@@ -1,8 +1,5 @@
-import { hostname } from "os";
-
 const nextConfig = {
     pageExtensions: ["ts", "tsx"],
-    //reactStrictMode: true,
     images: {
       remotePatterns: [{
         protocol:"https",
@@ -12,7 +9,7 @@ const nextConfig = {
       return [
         {
           source: "/",
-          destination: "/auth/register",
+          destination: "/home",
           permanent: true,
         },
       ];

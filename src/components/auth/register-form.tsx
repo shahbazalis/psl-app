@@ -71,7 +71,7 @@ const RegisterForm = () => {
     const fileData = new FormData();
     fileData.set("file", selectedFile);
     setLoading(true);
-    
+
     const response = await PlayerRegistration(data, fileData);
     if (response.email) {
       setLoading(false);
@@ -91,8 +91,8 @@ const RegisterForm = () => {
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 500 * 1024) {
-        setErrorMessage("File size exceeds 500KB");
+      if (file.size > 3000 * 1024) {
+        setErrorMessage("File size exceeds 3MB");
         return;
       }
     }
