@@ -9,7 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { LoginSchema } from "@/schema";
+import { ForgetPasswordSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "../ui/input";
@@ -18,57 +18,46 @@ import { useFormStatus } from "react-dom";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertMessage } from "../Alert";
-import { LoginAction } from "@/app/server-actions/login-action";
 import { z } from "zod";
-import { setCookie } from "@/lib/cookies";
-import { AlertDialogComponent } from "../alert-dialog";
+import {
+  GetPlayerByEmail,
+  ForgetPassword,
+} from "@/app/server-actions/players-actions";
 import Link from "next/link";
 
-const LoginForm = () => {
+const FogretPasswordForm = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
-  const [showDialog, setShowDialog] = useState(false);
 
   const form = useForm({
-    resolver: zodResolver(LoginSchema),
+    resolver: zodResolver(ForgetPasswordSchema),
     defaultValues: {
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
-  const handleDialogClose = () => {
-    setShowDialog(false);
-  };
-
-  const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
-    const response = await LoginAction(data);
-
-    if (response.token && response.admin) {
-      setLoading(true);
-      await setCookie("accessToken", response.token);
-      await setCookie("admin", response.admin);
-      router.push("/home");
-    } else {
-      if (response.message) setErrorMessage(response.message);
-      else {
-        setShowDialog(true);
+  const onSubmit = async (data: z.infer<typeof ForgetPasswordSchema>) => {
+    const getPlayer = await GetPlayerByEmail(data.email);
+    if (getPlayer.id) {
+      const response = await ForgetPassword(getPlayer.id, data.password);
+      if (response.email) {
+        setLoading(true);
+        router.push("/auth/login");
+      } else {
+        if (response.message) setErrorMessage(response.message);
+        setLoading(false);
       }
-      setLoading(false);
+    } else {
+      setErrorMessage("No user with this email found.");
     }
-  };
-
-  const handleLoginConfirmation = async () => {
-    setShowDialog(false); // Close the dialog after confirmation
   };
 
   const { pending } = useFormStatus();
   return (
-    <CardWrapper
-      label="Login to your account"
-      title="Login"
-    >
+    <CardWrapper label="Create new password" title="Forget Passoword">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
@@ -102,40 +91,44 @@ const LoginForm = () => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="password" placeholder="******" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
           <Button
             type="submit"
             className="w-full bg-green-800"
             disabled={pending}
           >
-            {loading ? "Loading..." : "Login"}
+            {loading ? "Loading..." : "Submit"}
           </Button>
         </form>
       </Form>
 
-      <div>
-        <AlertDialogComponent
-          showDialog={showDialog}
-          onClose={handleDialogClose}
-          title="Login Not Allowed"
-          description="You are not allowed to log in. This action cannot be undone. Please contact support if you believe this is an error."
-          handleConfirmation={handleLoginConfirmation}
-        />
-      </div>
-
       <div className="mt-5">
         {errorMessage && <AlertMessage message={errorMessage} />}
       </div>
+      {/* Additional content can go here */}
       <div className="flex justify-center items-center space-x-4 mt-4">
         <Link href="/auth/register" className="text-black hover:underline">
           Register
         </Link>
-        <Link href="/auth/forget-password" className="text-black hover:underline">
-          Forget Password?
+        <Link href="/auth/login" className="text-black hover:underline">
+          Login
         </Link>
       </div>
     </CardWrapper>
   );
 };
 
-export default LoginForm;
+export default FogretPasswordForm;
