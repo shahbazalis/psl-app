@@ -22,7 +22,7 @@ type GetSignedURLParams = {
 }
 
 const maxFileSize = 1048576 * 10 // 1 MB
-
+console.log("Process:",process.env);
 const s3Client = new S3Client({
   region: process.env.AWS_BUCKET_REGION!,
   credentials: {
