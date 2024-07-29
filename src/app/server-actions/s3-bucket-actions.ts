@@ -22,14 +22,21 @@ type GetSignedURLParams = {
 }
 
 const maxFileSize = 1048576 * 10 // 1 MB
-
+console.log("Process:",process.env);
 const s3Client = new S3Client({
-  region: process.env.AWS_BUCKET_REGION!,
+  region: "us-east-2",
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY!,
-    secretAccessKey: process.env.AWS_SECRET_KEY!,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey:process.env.AWS_SECRET_KEY_ID!,
   },
 });
+// const s3Client = new S3Client({
+//   region: process.env.AWS_BUCKET_REGION!,
+//   credentials: {
+//     accessKeyId: process.env.AWS_ACCESS_KEY!,
+//     secretAccessKey: process.env.AWS_SECRET_KEY!,
+//   },
+// });
 
 export async function getSignedURL({
   fileName,
@@ -45,7 +52,7 @@ export async function getSignedURL({
   }
 
   const putObjectCommand = new PutObjectCommand({
-    Bucket: process.env.AWS_BUCKET_NAME!,
+    Bucket: "psl-s3-vercel-bucket",//process.env.AWS_BUCKET_NAME!,
     Key: fileName,
     ContentType: fileType,
     ContentLength: fileSize,
