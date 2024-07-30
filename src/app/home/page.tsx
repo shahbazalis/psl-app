@@ -59,7 +59,7 @@ export default function Home() {
                 <CardTitle className="flex items-center">
                   <Image
                     className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full border-4 border-white shadow-lg mr-4 sm:mr-6 md:mr-8"
-                    src={`/teams/${team.name.replace(/\s+/g, "-")}.jpg`}
+                    src={`/teams/${team.name}.jpg`}
                     alt={team.name}
                     width={128}
                     height={128}
