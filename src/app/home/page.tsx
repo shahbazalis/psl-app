@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -51,12 +52,15 @@ export default function Home() {
         height={720}
       />
 
-      <section className="grid w-full grid-cols-1 gap-4 mt-4 mb-24 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 overflow-auto">
+      <section className="grid w-full grid-cols-1 gap-4 mt-4 mb-24 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {teams.map((team) => (
           <div key={team.id} className="overflow-auto">
-            <Card className="cursor-pointer hover:bg-blue-500" onClick={() => router.push("/teams")}>
+            <Card
+              className="cursor-pointer hover:bg-blue-500 hover:text-white"
+              onClick={() => router.push("/teams")}
+            >
               <CardHeader>
-                <CardTitle className="flex items-center">
+                <CardTitle className="flex ">
                   <Image
                     className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full border-4 border-white shadow-lg mr-4 sm:mr-6 md:mr-8"
                     src={`/teams/${team.name}.jpg`}
@@ -64,7 +68,9 @@ export default function Home() {
                     width={128}
                     height={128}
                   />
-                  <span className="text-black align-items justify-center text-sm sm:text-base md:text-lg lg:text-xl">
+                  <span
+                    className="flex items-center justify-center text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl "
+                  >
                     {team.name}
                   </span>
                 </CardTitle>

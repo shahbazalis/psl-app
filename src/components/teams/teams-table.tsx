@@ -153,7 +153,7 @@ export default function TeamsTable({
     columns.push(
       {
         accessorKey: "budget",
-        header: "Budget",
+        header: "Budget(millions)",
         cell: ({ row }) => (
           <div className="capitalize">{row.getValue("budget")}</div>
         ),
@@ -273,7 +273,7 @@ export default function TeamsTable({
                     onClick={() => handleRowClick(row.original)}
                     className={
                       selectedTeam?.id === row.original.id
-                        ? "bg-blue-500 hover:bg-blue-400 text-white"
+                        ? "bg-blue-400 hover:bg-blue-600 text-white"
                         : ""
                     }
                     data-state={row.getIsSelected() && "selected"}
