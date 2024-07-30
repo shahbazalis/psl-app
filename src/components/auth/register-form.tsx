@@ -91,7 +91,7 @@ const RegisterForm = () => {
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
     let fileTypeParts = file.type.split('/');
-    
+    setErrorMessage("");
     if (file) {
       if (file.size > 3000 * 1024) {
         setErrorMessage("File size exceeds 3MB");
