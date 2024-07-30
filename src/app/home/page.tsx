@@ -37,7 +37,8 @@ export default function Home() {
   if (loading) {
     return <LoadingComponent />;
   }
-
+const teamName = teams[0].name.replace(/\s+/g, '');
+console.log('Team Name:',teamName);
   return (
     <div className="w-full h-screen overflow-auto">
       <PageTitle title="Home" />
@@ -63,7 +64,7 @@ export default function Home() {
                 <CardTitle className="flex ">
                   <Image
                     className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full border-4 border-white shadow-lg mr-4 sm:mr-6 md:mr-8"
-                    src={`/teams/${team.name.replace(/\s+/g, '')}.jpg`}
+                    src={`/teams/${team.name}.jpg`}
                     alt={team.name}
                     width={128}
                     height={128}
