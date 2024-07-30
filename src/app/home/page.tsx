@@ -64,7 +64,7 @@ console.log('Team Name:',teamName);
                 <CardTitle className="flex ">
                   <Image
                     className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full border-4 border-white shadow-lg mr-4 sm:mr-6 md:mr-8"
-                    src={`/teams/${team.name}.jpg`}
+                    src={`https://psl-s3-vercel-bucket.s3.us-east-2.amazonaws.com/${team.name.replace(/\s+/g, '')}.jpg`}
                     alt={team.name}
                     width={128}
                     height={128}
