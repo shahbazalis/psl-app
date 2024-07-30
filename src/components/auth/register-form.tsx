@@ -90,12 +90,14 @@ const RegisterForm = () => {
 
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
+    let fileTypeParts = file.type.split('/');
+    
     if (file) {
       if (file.size > 3000 * 1024) {
         setErrorMessage("File size exceeds 3MB");
         return;
-      } else if (file.type !== "jpg") {
-        setErrorMessage("File type should be JPG");
+      } else if (fileTypeParts[1] != "jpg" && fileTypeParts[1] != "jpeg" && fileTypeParts[1] != "png") {
+        setErrorMessage("File type should be JPG or PNG");
         return;
       }
     }
@@ -238,11 +240,6 @@ const RegisterForm = () => {
                 </FormItem>
               )}
             />
-            <div>
-              <span className="text-red-600 font-extrabold uppercase italic shadow-lg">
-                Image Type should be JPG
-              </span>
-            </div>
             <FormField
               control={form.control}
               name="password"
