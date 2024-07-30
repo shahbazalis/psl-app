@@ -138,21 +138,11 @@ export default function PlayersTable() {
     // Fetch the selected team
     const selectedTeam = teams.find((team) => team.id === newTeamId);
     const newStatus = selectedTeam?.name === "Default Team" ? "UNSOLD" : "SOLD";
-    const price = player.price; // Assuming price is a property of Player
 
-    // Get the team the player is leaving
-    const oldTeamId = player.teamId;
-    const oldTeam = teams.find((team) => team.id === oldTeamId);
 
-    // Update the player's team and status
-    await UpdatePlayer(playerId, newStatus, newTeamId);
-
-    // Update the old team's budget if moving to "No Team"
-    if (newStatus === "UNSOLD" && oldTeam) {
-      const updatedOldTeamBudget = oldTeam.budget + price;
-      await UpdateTeam(oldTeamId, updatedOldTeamBudget);
+    if(newStatus === 'UNSOLD'){
+      await UpdatePlayer(playerId, newStatus, newTeamId,0);
     }
-
     await UpdatePlayer(playerId, newStatus, newTeamId);
 
     setPlayers((prevPlayers) =>
@@ -163,6 +153,7 @@ export default function PlayersTable() {
       )
     );
   };
+
   const handleDeletePlayer = async (dltdPlayer: Player) => {
     if (dltdPlayer.status === "SOLD") {
       setDeleteAlertTitle("Sorry!");

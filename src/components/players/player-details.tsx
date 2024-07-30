@@ -110,11 +110,8 @@ export default function PlayerDetail() {
       const price = form.getValues("value");
       await UpdatePlayer(selectedPlayer.id, "SOLD", id, price);
     }
-    const updatedTeam = await UpdateTeam(teamId, teamBudget);
-    if (updatedTeam) {
-      setShowDialog(false); // Close the dialog after confirmation
-      router.push("/players");
-    }
+    setShowDialog(false); // Close the dialog after confirmation
+    router.push("/players");
   };
 
   return (
@@ -134,7 +131,7 @@ export default function PlayerDetail() {
               src={selectedPlayer.url}
               alt={selectedPlayer.name}
               unoptimized={true}
-              width={96} 
+              width={96}
               height={96}
             />
           )}
