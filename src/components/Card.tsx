@@ -9,7 +9,7 @@ export type CardProps = {
 
 export default function Card(props: CardProps) {
   return (
-    <CardContent>
+    <CardContent className="cursor-pointer hover:bg-blue-500 hover:text-white">
       <section className="flex justify-between gap-2">
         <p className="text-sm">{props.label}</p>
         <props.icon className="h-4 w-4 text-gray-400" />

@@ -40,37 +40,48 @@ const Navbar = () => {
             <Menubar>
               <MenubarMenu>
                 <MenubarTrigger
-                  className={accessToken ? "opacity-50 cursor-not-allowed" : ""}
+                  className={accessToken ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:text-blue-500"}
                   disabled={accessToken}
                 >
                   Views
                 </MenubarTrigger>
                 <MenubarContent>
-                  <MenubarItem>
-                    <Link href="/auth/login">Login as Admin</Link>
-                  </MenubarItem>
+                  <Link href="/auth/login">
+                    <MenubarItem className="cursor-pointer hover:text-blue-500">
+                      Login as Admin
+                    </MenubarItem>
+                  </Link>
                   <MenubarSeparator />
-                  <MenubarItem>
-                    <Link href="/auth/register">Register as Player</Link>
-                  </MenubarItem>
+                  <Link href="/auth/register">
+                    <MenubarItem className="cursor-pointer hover:text-blue-500">
+                      Register as Player
+                    </MenubarItem>
+                  </Link>
                   <MenubarSeparator />
-                  <MenubarItem>
-                    <Link href="/home">Home</Link>
-                  </MenubarItem>
+                  <Link href="/home">
+                    <MenubarItem className="cursor-pointer hover:text-blue-500">
+                      {" "}
+                      Home
+                    </MenubarItem>
+                  </Link>
                   <MenubarSeparator />
-                  <MenubarItem>
-                    <Link href="/players">Players</Link>
-                  </MenubarItem>
+                  <Link href="/players">
+                    <MenubarItem className="cursor-pointer hover:text-blue-500">
+                      Players
+                    </MenubarItem>
+                  </Link>
                   <MenubarSeparator />
-                  <MenubarItem>
-                    <Link href="/teams">Teams</Link>
-                  </MenubarItem>
+                  <Link href="/teams">
+                    <MenubarItem className="cursor-pointer hover:text-blue-500">
+                      Teams
+                    </MenubarItem>
+                  </Link>
                 </MenubarContent>
               </MenubarMenu>
               <MenubarMenu>
                 <MenubarTrigger
                   className={
-                    !accessToken ? "opacity-50 cursor-not-allowed" : ""
+                    !accessToken ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:text-blue-500"
                   }
                   disabled={!accessToken}
                   onClick={handleRemove}

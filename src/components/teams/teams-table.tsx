@@ -264,7 +264,7 @@ export default function TeamsTable({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody >
             {table.getFilteredRowModel().rows ? (
               table.getRowModel().rows.map((row) => {
                 return (
@@ -273,7 +273,7 @@ export default function TeamsTable({
                     onClick={() => handleRowClick(row.original)}
                     className={
                       selectedTeam?.id === row.original.id
-                        ? "bg-slate-300 hover:bg-blue-200"
+                        ? "bg-blue-500 hover:bg-blue-400 text-white"
                         : ""
                     }
                     data-state={row.getIsSelected() && "selected"}

@@ -54,7 +54,7 @@ export default function Home() {
       <section className="grid w-full grid-cols-1 gap-4 mt-4 mb-24 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 overflow-auto">
         {teams.map((team) => (
           <div key={team.id} className="overflow-auto">
-            <Card onClick={() => router.push("/teams")}>
+            <Card className="cursor-pointer hover:bg-blue-500" onClick={() => router.push("/teams")}>
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Image
