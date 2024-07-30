@@ -206,6 +206,7 @@ export default function PlayersTable() {
   const handleAddAdminConfirmation = async () => {
     await AddAdmin(addAdminId);
     setShowDialog(false);
+    router.push("/admins");
   };
 
   const columns: ColumnDef<Player>[] = [
@@ -327,7 +328,7 @@ export default function PlayersTable() {
                         variant="ghost"
                         className="flex items-center space-x-2"
                         onClick={() => handleDeletePlayer(player)}
-                        disabled={player.status === "SOLD"} // || player.admin
+                        disabled={player.status === "SOLD" || player.admin}
                       >
                         <UserRoundX className="h-5 w-5 text-red-700" />
                       </Button>

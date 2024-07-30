@@ -130,7 +130,7 @@ export default function PlayerDetail() {
         <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 rounded-md border p-4">
           {selectedPlayer && (
             <Image
-              className="w-24 h-24 sm:w-48 sm:h-48 rounded-full border-4 border-white shadow-lg sm:mr-8"
+              className="w-40 h-40 sm:w-48 sm:h-48 rounded-full border-4 border-white shadow-lg sm:mr-8"
               src={selectedPlayer.url}
               alt={selectedPlayer.name}
               unoptimized={true}

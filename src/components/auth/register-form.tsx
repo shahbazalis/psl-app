@@ -94,6 +94,9 @@ const RegisterForm = () => {
       if (file.size > 3000 * 1024) {
         setErrorMessage("File size exceeds 3MB");
         return;
+      } else if (file.type !== "jpg") {
+        setErrorMessage("File type should be JPG");
+        return;
       }
     }
     setSelectedFile(file);
