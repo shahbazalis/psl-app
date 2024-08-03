@@ -20,36 +20,35 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getListofPlayers = async () => {
-      const fetchedPlayers = await PlayersList();
-      if (fetchedPlayers !== 500) {
-        setSoldPlayers(
-          fetchedPlayers.filter(
-            (player: { status: string }) => player.status !== "UNSOLD"
-          )
-        );
-        setUnSoldPlayers(
-          fetchedPlayers.filter(
-            (player: { status: string }) => player.status !== "SOLD"
-          )
-        );
-      } else console.log("error:", fetchedPlayers.message);
-      setLoading(false);
+    const fetchData = async () => {
+      try {
+        const fetchedPlayers = await PlayersList();
+        if (fetchedPlayers !== 500) {
+          setSoldPlayers(
+            fetchedPlayers.filter(
+              (player: { status: string }) => player.status !== "UNSOLD"
+            )
+          );
+          setUnSoldPlayers(
+            fetchedPlayers.filter(
+              (player: { status: string }) => player.status !== "SOLD"
+            )
+          );
+
+          const fetchedTeams = await TeamsList();
+          const updatedTeams = fetchedTeams.filter(
+            (team: Team) => team.name !== "Default Team"
+          );
+          setTeams(updatedTeams);
+
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      }
     };
-
-    getListofPlayers();
-  }, []);
-
-  useEffect(() => {
-    const fetchTeams = async () => {
-      const fetchedTeams = await TeamsList();
-      const updatedTeams = fetchedTeams.filter(
-        (team: Team) => team.name !== "Default Team"
-      );
-      setTeams(updatedTeams);
-    };
-
-    fetchTeams();
+    fetchData();
   }, []);
 
   if (loading) {
