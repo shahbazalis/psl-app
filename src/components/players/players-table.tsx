@@ -139,9 +139,8 @@ export default function PlayersTable() {
     const selectedTeam = teams.find((team) => team.id === newTeamId);
     const newStatus = selectedTeam?.name === "Default Team" ? "UNSOLD" : "SOLD";
 
-
-    if(newStatus === 'UNSOLD'){
-      await UpdatePlayer(playerId, newStatus, newTeamId,0);
+    if (newStatus === "UNSOLD") {
+      await UpdatePlayer(playerId, newStatus, newTeamId, 0);
     }
     await UpdatePlayer(playerId, newStatus, newTeamId);
 
@@ -407,8 +406,19 @@ export default function PlayersTable() {
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm mr-4"
         />
+        {isAdmin && (
+          <Input
+            placeholder="Filter Roles..."
+            value={(table.getColumn("role")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("role")?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm mr-4"
+          />
+        )}
+        
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

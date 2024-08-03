@@ -9,7 +9,7 @@ const backendURL= process.env.DATA_BASE_URL
 const baseURL = `${backendURL}/auth/login`;
 
 export const LoginAction = async (props: LoginProps) => {
-  const email = props.email;
+  const email = props.email.toLowerCase();
   const password = props.password;
   try {
     const response = await fetch(`${baseURL}`, {
