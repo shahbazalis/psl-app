@@ -100,7 +100,7 @@ export function TeamPlayers({ selectedTeam}: TeamPlayersTableProps) {
     columns.push(
       {
         accessorKey: "price",
-        header: "Price",
+        header: "Price(millions)",
         cell: ({ row }) => <div>{row.getValue("price")}</div>,
       },
       {

@@ -86,7 +86,7 @@ export const AddTeamSchema = z.object({
 export const BidPlayerSchema = z.object({
   value: z
     .number()
-    .min(2, { message: "Please fill out this field with two digits" }),
+    .min(5000, { message: "Please fill out this field with value at least 5000" }),
   team: z.string().min(1, {
     message: "Please select the team",
   }),
