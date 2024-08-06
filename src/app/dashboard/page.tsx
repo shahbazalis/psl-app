@@ -26,12 +26,14 @@ export default function Home() {
         if (fetchedPlayers !== 500) {
           setSoldPlayers(
             fetchedPlayers.filter(
-              (player: { status: string }) => player.status !== "UNSOLD"
+              (player: { status: string; name: string }) =>
+                player.status !== "UNSOLD" && player.name !== "Alis"
             )
           );
           setUnSoldPlayers(
             fetchedPlayers.filter(
-              (player: { status: string }) => player.status !== "SOLD"
+              (player: { status: string; name: string }) =>
+                player.status !== "SOLD" && player.name !== "Alis"
             )
           );
 
