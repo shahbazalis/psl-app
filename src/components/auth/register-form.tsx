@@ -90,13 +90,17 @@ const RegisterForm = () => {
 
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
-    let fileTypeParts = file.type.split('/');
+    let fileTypeParts = file.type.split("/");
     setErrorMessage("");
     if (file) {
       if (file.size > 3000 * 1024) {
         setErrorMessage("File size exceeds 3MB");
         return;
-      } else if (fileTypeParts[1] != "jpg" && fileTypeParts[1] != "jpeg" && fileTypeParts[1] != "png") {
+      } else if (
+        fileTypeParts[1] != "jpg" &&
+        fileTypeParts[1] != "jpeg" &&
+        fileTypeParts[1] != "png"
+      ) {
         setErrorMessage("File type should be JPG or PNG");
         return;
       }
@@ -117,6 +121,7 @@ const RegisterForm = () => {
           <div className="space-y-4">
             <FormField
               control={form.control}
+              disabled
               name="email"
               render={({ field }) => (
                 <FormItem>
@@ -134,6 +139,7 @@ const RegisterForm = () => {
             />
             <FormField
               control={form.control}
+              disabled
               name="name"
               render={({ field }) => (
                 <FormItem>
@@ -147,6 +153,7 @@ const RegisterForm = () => {
             />
             <FormField
               control={form.control}
+              disabled
               name="phoneNumber"
               render={({ field }) => (
                 <FormItem>
@@ -160,6 +167,7 @@ const RegisterForm = () => {
             />
             <FormField
               control={form.control}
+              disabled
               name="nationality"
               render={({ field }) => {
                 return (
@@ -197,6 +205,7 @@ const RegisterForm = () => {
             <FormField
               control={form.control}
               name="role"
+              disabled
               render={({ field }) => {
                 return (
                   <FormItem>
@@ -234,7 +243,7 @@ const RegisterForm = () => {
                 <FormItem>
                   <FormLabel className="mr-10">Upload Image</FormLabel>
                   <FormControl>
-                    <input type="file" onChange={handleFileChange} />
+                    <input disabled type="file" onChange={handleFileChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -242,6 +251,7 @@ const RegisterForm = () => {
             />
             <FormField
               control={form.control}
+              disabled
               name="password"
               render={({ field }) => (
                 <FormItem>
@@ -255,6 +265,7 @@ const RegisterForm = () => {
             />
             <FormField
               control={form.control}
+              disabled
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
@@ -270,7 +281,8 @@ const RegisterForm = () => {
           <Button
             type="submit"
             className="w-full  bg-green-800"
-            disabled={pending}
+            disabled
+            // disabled={pending}
           >
             {loading ? "Loading..." : "Register"}
           </Button>
