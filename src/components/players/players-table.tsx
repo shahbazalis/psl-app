@@ -356,7 +356,6 @@ export default function PlayersTable() {
                         variant="ghost"
                         className="flex items-center space-x-2"
                         onClick={() => handlePlayerDetails(player)}
-                        disabled={player.status === "SOLD"}
                       >
                         <BookUser className="h-5 w-5 text-blue-700" />
                       </Button>
