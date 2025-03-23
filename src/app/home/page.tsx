@@ -14,7 +14,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -53,7 +52,7 @@ export default function Home() {
           <div key={team.id} className="overflow-auto">
             <Card
               className="cursor-pointer hover:bg-blue-500 hover:text-white"
-              // onClick={() => router.push("/teams")}
+              onClick={() => router.push("/teams")}
             >
               <CardHeader>
                 <CardTitle className="flex ">

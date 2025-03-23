@@ -65,17 +65,17 @@ const Navbar = () => {
                     </MenubarItem>
                   </Link>
                   <MenubarSeparator />
-                  {/* <Link href="/players">
+                  <Link href="/players">
                     <MenubarItem className="cursor-pointer hover:text-blue-500">
                       Players
                     </MenubarItem>
-                  </Link> */}
+                  </Link>
                   <MenubarSeparator />
-                  {/* <Link href="/teams">
+                  <Link href="/teams">
                     <MenubarItem className="cursor-pointer hover:text-blue-500">
                       Teams
                     </MenubarItem>
-                  </Link> */}
+                  </Link>
                 </MenubarContent>
               </MenubarMenu>
               <MenubarMenu>

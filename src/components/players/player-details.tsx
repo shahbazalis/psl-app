@@ -29,14 +29,12 @@ import { BidPlayerSchema } from "@/schema";
 import { Player } from "./players-table";
 import { getCookie } from "@/lib/cookies";
 import { UpdatePlayer } from "@/app/server-actions/players-actions";
-import {
-  TeamsList,
-  GetTeam,
-  UpdateTeam,
-} from "@/app/server-actions/teams-actions";
+import { TeamsList, GetTeam } from "@/app/server-actions/teams-actions";
 import { Team } from "@/app/teams/page";
 import { useRouter } from "next/navigation";
 import { AlertDialogComponent } from "../alert-dialog";
+import { motion } from "framer-motion";
+import LoadingComponent from "@/components/loader";
 
 export default function PlayerDetail() {
   const [bidValue, setBidValue] = useState(0);
@@ -49,6 +47,8 @@ export default function PlayerDetail() {
   const [disableSoldBtn, setDisableSoldBtn] = useState(false);
   const [teamId, setTeamId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(true);
+
   const router = useRouter();
 
   const form = useForm({
@@ -62,12 +62,18 @@ export default function PlayerDetail() {
 
   useEffect(() => {
     const getPlayerData = async () => {
-      const playerDetails = await getCookie("player");
-      setSelectedPlayer(JSON.parse(playerDetails));
-      const fetchedTeams = await TeamsList();
-      setTeams(
-        fetchedTeams.filter((team: Team) => team.name !== "Default Team")
-      );
+      try {
+        const playerDetails = await getCookie("player");
+        setSelectedPlayer(JSON.parse(playerDetails));
+        const fetchedTeams = await TeamsList();
+        setTeams(
+          fetchedTeams.filter((team: Team) => team.name !== "Default Team")
+        );
+      } catch (error) {
+        console.error("Failed to fetch teams:", error);
+      } finally {
+        setLoading(false); // Stop loading once fetched
+      }
     };
 
     getPlayerData();
@@ -113,17 +119,23 @@ export default function PlayerDetail() {
     setShowDialog(false); // Close the dialog after confirmation
     router.push("/players");
   };
+  if (loading) {
+    return <LoadingComponent />;
+  }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Player Details</CardTitle>
-        <CardDescription>
-          Teams can see the player details here and make the bid.
-        </CardDescription>
+    <Card className="w-full max-w-3xl mx-auto p-6 bg-white dark:bg-gray-900 shadow-lg rounded-lg">
+      <CardHeader className="flex justify-between items-center">
+        <div>
+          <CardTitle className="text-xl font-bold dark:text-white">
+            Player Details
+          </CardTitle>
+          <CardDescription className="text-gray-600 dark:text-gray-400 ">
+            Teams can see the player details here and make the bid.
+          </CardDescription>
+        </div>
       </CardHeader>
-      <CardContent className="grid gap-4">
-        {/* <CircleUserRound className="w-24 h-24 rounded-full border-4 border-white shadow-lg mr-8" /> */}
+      <CardContent>
         <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 rounded-md border p-4">
           {selectedPlayer && (
             <Image
@@ -153,69 +165,67 @@ export default function PlayerDetail() {
               )}
               className="space-y-6"
             >
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="value"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Bid Value</FormLabel>
-                      <FormControl>
-                        <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-60">
-                          <Input
-                            {...field}
-                            placeholder="Enter The Amount"
-                            className="w-full md:w-1/5"
-                            onChange={(e) => {
-                              field.onChange(e);
-                              form.setValue(
-                                "value",
-                                parseFloat(e.target.value) || 0
-                              );
-                            }}
-                          />
-                          {isSubmitted &&
-                            form.watch("value") > 0 &&
-                            form.watch("team") && (
-                              <p className="text-lg font-semibold leading-none mt-4 md:mt-0">
-                                {selectedRadio} made a bid of {bidValue} for{" "}
-                                {selectedPlayer && selectedPlayer.name}
-                              </p>
-                            )}
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="value"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bid Value</FormLabel>
+                    <FormControl>
+                      <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-60">
+                        <Input
+                          {...field}
+                          placeholder="Enter The Amount"
+                          className="w-full md:w-1/5"
+                          onChange={(e) => {
+                            field.onChange(e);
+                            form.setValue(
+                              "value",
+                              parseFloat(e.target.value) || 0
+                            );
+                          }}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="team"
                 render={({ field }) => {
                   return (
                     <FormItem>
+                      <FormLabel>Select Team</FormLabel>
                       <FormControl>
                         <RadioGroup
                           value={field.value}
                           onValueChange={(value: any) => {
                             field.onChange(value);
                           }}
+                          className="grid grid-cols-2 md:grid-cols-3 gap-4"
                         >
-                          {teams.map((team, index) => {
-                            return (
-                              <div
-                                key={index}
-                                className="flex items-center space-x-2"
-                              >
-                                <RadioGroupItem
-                                  value={`${team.id}|${team.name}`}
-                                  id={`r${index}`}
-                                />
-                                <Label htmlFor={`r${index}`}>{team.name}</Label>
-                              </div>
-                            );
-                          })}
+                          {teams &&
+                            teams.map((team, index) => {
+                              return (
+                                <motion.div
+                                  whileHover={{ scale: 1.05 }}
+                                  key={index}
+                                >
+                                  <RadioGroupItem
+                                    value={`${team.id}|${team.name}`}
+                                    id={`r${index}`}
+                                  />
+                                  <Label
+                                    htmlFor={`r${index}`}
+                                    className="dark:text-white"
+                                  >
+                                    {team.name}
+                                  </Label>
+                                </motion.div>
+                              );
+                            })}
                         </RadioGroup>
                       </FormControl>
                       <FormMessage />
@@ -227,17 +237,17 @@ export default function PlayerDetail() {
                 <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
               )}
               <input type="hidden" {...form.register("action")} />
-              <div className="flex justify-between space-x-2">
+              <div className="flex justify-between">
                 <Button
                   type="submit"
-                  className="bg-sky-600 px-2 py-1 text-sm sm:px-4 sm:py-2 sm:text-base"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2"
                   onClick={() => form.setValue("action", "bid")}
                 >
                   Bid for Player
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-red-600 px-2 py-1 text-sm sm:px-4 sm:py-2 sm:text-base"
+                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2"
                   onClick={() => form.setValue("action", "sold")}
                   disabled={bidValue <= 0 || disableSoldBtn}
                 >
@@ -246,6 +256,21 @@ export default function PlayerDetail() {
               </div>
             </form>
           </Form>
+          {bidValue > 0 && selectedRadio && (
+            <motion.div
+              className="mt-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-md"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <p className="text-lg font-semibold dark:text-white">
+                {selectedRadio} placed a bid of{" "}
+                <span className="text-green-600 dark:text-green-400">
+                  ${bidValue}
+                </span>{" "}
+                for {selectedPlayer && selectedPlayer.name}
+              </p>
+            </motion.div>
+          )}
           <div>
             <AlertDialogComponent
               showDialog={showDialog}
