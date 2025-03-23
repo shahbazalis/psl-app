@@ -118,10 +118,9 @@ const RegisterForm = () => {
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              disabled
               name="email"
               render={({ field }) => (
                 <FormItem>
@@ -139,7 +138,6 @@ const RegisterForm = () => {
             />
             <FormField
               control={form.control}
-              disabled
               name="name"
               render={({ field }) => (
                 <FormItem>
@@ -151,9 +149,10 @@ const RegisterForm = () => {
                 </FormItem>
               )}
             />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              disabled
               name="phoneNumber"
               render={({ field }) => (
                 <FormItem>
@@ -167,7 +166,21 @@ const RegisterForm = () => {
             />
             <FormField
               control={form.control}
-              disabled
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mr-10">Upload Image</FormLabel>
+                  <FormControl>
+                    <input type="file" onChange={handleFileChange} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
               name="nationality"
               render={({ field }) => {
                 return (
@@ -205,7 +218,6 @@ const RegisterForm = () => {
             <FormField
               control={form.control}
               name="role"
-              disabled
               render={({ field }) => {
                 return (
                   <FormItem>
@@ -236,22 +248,11 @@ const RegisterForm = () => {
                 );
               }}
             />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="mr-10">Upload Image</FormLabel>
-                  <FormControl>
-                    <input disabled type="file" onChange={handleFileChange} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              disabled
               name="password"
               render={({ field }) => (
                 <FormItem>
@@ -265,7 +266,6 @@ const RegisterForm = () => {
             />
             <FormField
               control={form.control}
-              disabled
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
@@ -278,12 +278,7 @@ const RegisterForm = () => {
               )}
             />
           </div>
-          <Button
-            type="submit"
-            className="w-full  bg-green-800"
-            disabled
-            // disabled={pending}
-          >
+          <Button type="submit" className="w-full  bg-green-800">
             {loading ? "Loading..." : "Register"}
           </Button>
         </form>

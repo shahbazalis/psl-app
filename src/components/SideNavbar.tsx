@@ -48,34 +48,34 @@ export default function SideNavbar({}: Props) {
       icon: HomeIcon,
       variant: "default" as "default",
     },
-    // {
-    //   title: "Players",
-    //   href: "/players",
-    //   icon: Users,
-    //   variant: "ghost" as "ghost",
-    // },
-    // {
-    //   title: "Teams",
-    //   href: "/teams",
-    //   icon: Users,
-    //   variant: "ghost" as "ghost",
-    // },
+    {
+      title: "Players",
+      href: "/players",
+      icon: Users,
+      variant: "ghost" as "ghost",
+    },
+    {
+      title: "Teams",
+      href: "/teams",
+      icon: Users,
+      variant: "ghost" as "ghost",
+    },
   ];
 
-  // if (isAdmin) {
-  //   links.splice(1, 0, {
-  //     title: "Dashboard",
-  //     href: "/dashboard",
-  //     icon: LayoutDashboard,
-  //     variant: "ghost" as "ghost",
-  //   });
-  //   links.splice(2, 0, {
-  //     title: "Admins",
-  //     href: "/admins",
-  //     icon: Users,
-  //     variant: "ghost" as "ghost",
-  //   });
-  // }
+  if (isAdmin) {
+    links.splice(1, 0, {
+      title: "Dashboard",
+      href: "/dashboard",
+      icon: LayoutDashboard,
+      variant: "ghost" as "ghost",
+    });
+    links.splice(2, 0, {
+      title: "Admins",
+      href: "/admins",
+      icon: Users,
+      variant: "ghost" as "ghost",
+    });
+  }
 
   return (
     <div
