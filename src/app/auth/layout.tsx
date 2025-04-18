@@ -10,9 +10,9 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <section className="flex flex-col lg:flex-row h-screen overflow-hidden">
-      {/* Left Side Image with Loader Overlay */}
-      <div className="relative w-full lg:w-1/2 h-60 sm:h-72 md:h-80 lg:h-full">
+    <div className="flex flex-col lg:flex-row h-screen w-full">
+      {/* Image Side */}
+      <div className="relative w-full lg:w-1/2 h-64 lg:h-full">
         {!imageLoaded && (
           <div className="absolute inset-0 flex items-center justify-center bg-white z-10">
             <LoadingComponent />
@@ -23,20 +23,22 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
           alt="Banner"
           fill
           priority
-          sizes="(max-width: 1024px) 100vw, 50vw"
+          className="object-cover"
           onLoad={() => setImageLoaded(true)}
           onError={() => setImageLoaded(true)}
         />
       </div>
 
-      {/* Right Side Content */}
-      <div className="w-full lg:w-1/2 flex flex-col h-full">
+      {/* Form Side */}
+      <div className="w-full lg:w-1/2 flex flex-col h-full overflow-hidden">
         <Navbar />
-        <div className="flex flex-grow items-center justify-center p-4 overflow-auto">
-          {children}
+        <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-8">
+          <div className=" w-full mx-auto items-center justify-center flex flex-col">
+            {children}
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

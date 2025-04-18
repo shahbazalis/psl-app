@@ -46,7 +46,7 @@ export default function Home() {
           alt="Banner"
           width={1280}
           height={720}
-          className="w-full h-auto max-h-[250px] sm:max-h-[320px] md:max-h-[400px] object-cover"
+          className="w-full h-auto max-h-[250px] sm:max-h-[320px] md:max-h-[400px]"
           priority
         />
       </div>
@@ -58,9 +58,9 @@ export default function Home() {
               onClick={() => router.push("/teams")}
             >
               <CardHeader>
-                <CardTitle className="flex ">
+                <CardTitle className="flex flex-col items-center text-center space-y-2">
                   <Image
-                    className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full border-4 border-white shadow-lg mr-4 sm:mr-6 md:mr-8"
+                    className="w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full border-4 border-white shadow-lg"
                     src={`https://psl-s3-vercel-bucket.s3.us-east-2.amazonaws.com/${team.name.replace(
                       /\s+/g,
                       ""
@@ -69,7 +69,7 @@ export default function Home() {
                     width={128}
                     height={128}
                   />
-                  <span className="flex items-center justify-center text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl break-words leading-tight text-center">
+                  <span className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold break-words max-w-[8rem] sm:max-w-[10rem] md:max-w-[12rem]">
                     {team.name}
                   </span>
                 </CardTitle>
