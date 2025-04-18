@@ -40,14 +40,14 @@ export default function Home() {
   return (
     <div className="w-full h-screen overflow-auto">
       <PageTitle title="Home" />
-      <div className="relative w-full h-48 sm:h-64 md:h-80 lg:h-96 xl:h-[480px]">
+      <div className="w-full">
         <Image
           src="https://psl-s3-vercel-bucket.s3.us-east-2.amazonaws.com/banner.jpg"
           alt="Banner"
-          fill
-          className="object-cover"
+          width={1280}
+          height={720}
+          className="w-full h-auto max-h-[250px] sm:max-h-[320px] md:max-h-[400px] object-cover"
           priority
-          sizes="100vw"
         />
       </div>
       <section className="grid w-full grid-cols-1 gap-4 mt-4 mb-24 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
