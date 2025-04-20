@@ -23,7 +23,6 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
           alt="Banner"
           fill
           priority
-          className="object-cover"
           onLoad={() => setImageLoaded(true)}
           onError={() => setImageLoaded(true)}
         />
