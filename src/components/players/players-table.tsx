@@ -57,12 +57,13 @@ import {
   UpdatePlayer,
   DeletePlayer,
 } from "@/app/server-actions/players-actions";
-import { TeamsList, UpdateTeam } from "@/app/server-actions/teams-actions";
+import { TeamsList } from "@/app/server-actions/teams-actions";
 import { setCookie, getCookie } from "@/lib/cookies";
 import { Team } from "@/app/teams/page";
 import { AlertDialogComponent } from "@/components/alert-dialog";
 import { PlayersList } from "@/app/server-actions/players-actions";
 import LoadingComponent from "@/components/loader";
+import { PlayerDetail } from "@/components/players/player-details";
 
 export type Player = {
   price: number;
@@ -96,6 +97,9 @@ export default function PlayersTable() {
   const [addAdminId, setAddAdminId] = useState("");
   const [deletedPlayer, setDeletedPlayer] = useState<Player | null>(null);
   const [loading, setLoading] = useState(true);
+  const [openPlayerDetails, setOpenPlayerDetails] = useState(false);
+  const [selectedPlayer, setSelectedPlayer] = useState<Player>();
+
   const router = useRouter();
 
   useEffect(() => {
@@ -177,12 +181,16 @@ export default function PlayersTable() {
   };
 
   const handlePlayerDetails = async (player: Player) => {
-    await setCookie("player", JSON.stringify(player));
-    router.push("/players/player");
+    setSelectedPlayer(player);
+    setOpenPlayerDetails(true);
   };
 
   const handleDialogClose = () => {
     setShowDialog(false);
+  };
+
+  const handlePlayerDetailDailogClose = () => {
+    setOpenPlayerDetails(false);
   };
 
   const handleDeleteConfirmation = async () => {
@@ -417,7 +425,7 @@ export default function PlayersTable() {
             className="max-w-sm mr-4"
           />
         )}
-        
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -530,6 +538,15 @@ export default function PlayersTable() {
             }
           />
         </div>
+        {selectedPlayer && (
+          <div>
+            <PlayerDetail
+              showPlayerDetail={openPlayerDetails}
+              onClose={handlePlayerDetailDailogClose}
+              player={selectedPlayer}
+            ></PlayerDetail>
+          </div>
+        )}
       </div>
     </div>
   );
