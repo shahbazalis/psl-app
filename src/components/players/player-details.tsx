@@ -137,6 +137,7 @@ export default function PlayerDetail({
           setSelectedRadio("");
           setDisableSoldBtn(false);
           setErrorMessage("");
+          form.reset();
         }
       }}
     >
