@@ -63,7 +63,7 @@ import { Team } from "@/app/teams/page";
 import { AlertDialogComponent } from "@/components/alert-dialog";
 import { PlayersList } from "@/app/server-actions/players-actions";
 import LoadingComponent from "@/components/loader";
-import { PlayerDetail } from "@/components/players/player-details";
+import  PlayerDetail  from "@/components/players/player-details";
 
 export type Player = {
   price: number;

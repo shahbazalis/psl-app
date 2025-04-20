@@ -49,7 +49,7 @@ export type PlayerDetailDialogProps = {
   player: Player | undefined;
 };
 
-export function PlayerDetail({
+export default function PlayerDetail({
   showPlayerDetail,
   onClose,
   player,
