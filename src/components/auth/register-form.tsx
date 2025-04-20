@@ -284,7 +284,7 @@ const RegisterForm = () => {
               )}
             />
           </div>
-          <Button type="submit" className="w-full  bg-green-800">
+          <Button disabled type="submit" className="w-full  bg-green-800">
             {loading ? "Loading..." : "Register"}
           </Button>
         </form>
