@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
@@ -49,6 +49,11 @@ export type PlayerDetailDialogProps = {
   player: Player | undefined;
 };
 
+interface FullscreenElementWithVendor extends HTMLElement {
+  webkitRequestFullscreen?: () => void;
+  msRequestFullscreen?: () => void;
+}
+
 export default function PlayerDetail({
   showPlayerDetail,
   onClose,
@@ -62,6 +67,8 @@ export default function PlayerDetail({
   const [errorMessage, setErrorMessage] = useState("");
   const [showDialog, setShowDialog] = useState(false);
   const router = useRouter();
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const form = useForm({
     resolver: zodResolver(BidPlayerSchema),
@@ -71,6 +78,48 @@ export default function PlayerDetail({
       action: "",
     },
   });
+
+  const openFullscreen = () => {
+    const elem = containerRef.current as FullscreenElementWithVendor | null;
+
+    if (elem) {
+      // request fullscreen
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isFull =
+        document.fullscreenElement === containerRef.current ||
+        (document as any).webkitFullscreenElement === containerRef.current ||
+        (document as any).msFullscreenElement === containerRef.current;
+
+      setIsFullscreen(isFull);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    document.addEventListener("msfullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        handleFullscreenChange
+      );
+      document.removeEventListener(
+        "msfullscreenchange",
+        handleFullscreenChange
+      );
+    };
+  }, []);
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -152,14 +201,34 @@ export default function PlayerDetail({
         <Card className="bg-white dark:bg-gray-900 shadow-lg rounded-lg p-4">
           <CardHeader className="flex flex-col sm:flex-row items-center gap-4">
             {player && (
-              <Image
-                className="w-32 h-32 rounded-full border-4 border-white shadow-lg"
-                src={player.url}
-                alt={player.name}
-                unoptimized
-                width={128}
-                height={128}
-              />
+              <div
+                ref={containerRef}
+                onClick={openFullscreen}
+                className={`cursor-pointer border-4 border-white shadow-lg overflow-hidden ${
+                  isFullscreen
+                    ? "fixed inset-0 z-50 bg-black flex items-center justify-center"
+                    : "w-32 h-32 rounded-full relative"
+                }`}
+              >
+                {isFullscreen ? (
+                  <Image
+                    src={player.url}
+                    alt={player.name}
+                    fill
+                    unoptimized
+                    className="object-contain"
+                  />
+                ) : (
+                  <Image
+                    src={player.url}
+                    alt={player.name}
+                    width={128}
+                    height={128}
+                    unoptimized
+                    className="object-cover"
+                  />
+                )}
+              </div>
             )}
             <div className="text-center sm:text-left">
               <CardTitle className="text-lg dark:text-white">
