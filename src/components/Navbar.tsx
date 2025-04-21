@@ -16,19 +16,26 @@ import {
 
 const Navbar = () => {
   const router = useRouter();
-  const [accessToken, setAccessToken] = useState(false);
+  const [accessToken, setAccessToken] = useState<boolean | null>(null);
   useEffect(() => {
     const fetchAccessToken = async () => {
-      const accessToken = await getCookie("accessToken");
-      if (accessToken) setAccessToken(true);
+      const token = await getCookie("accessToken");
+      setAccessToken(!!token); // set to true/false
     };
 
     fetchAccessToken();
-  }, []);
+  }, []);;
+  
   const handleRemove = async () => {
     await deleteCookies(["accessToken", "admin", "player", "teams"]);
     router.push("/auth/login");
   };
+
+  if (accessToken === null) {
+    // Wait until we know whether user is logged in or not
+    return null;
+  }
+  
   return (
     <nav className="sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all bg-slate-200">
       <MaxWidthWrapper>
