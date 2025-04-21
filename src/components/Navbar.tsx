@@ -14,28 +14,17 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 
-const Navbar = () => {
-  const router = useRouter();
-  const [accessToken, setAccessToken] = useState<boolean | null>(null);
-  useEffect(() => {
-    const fetchAccessToken = async () => {
-      const token = await getCookie("accessToken");
-      setAccessToken(!!token); // set to true/false
-    };
+type Props = {
+  accessToken: boolean;
+};
 
-    fetchAccessToken();
-  }, []);;
-  
+const Navbar = ({ accessToken }: Props) => {
+  const router = useRouter();
+
   const handleRemove = async () => {
     await deleteCookies(["accessToken", "admin", "player", "teams"]);
     router.push("/auth/login");
   };
-
-  if (accessToken === null) {
-    // Wait until we know whether user is logged in or not
-    return null;
-  }
-  
   return (
     <nav className="sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all bg-slate-200">
       <MaxWidthWrapper>
@@ -47,7 +36,11 @@ const Navbar = () => {
             <Menubar>
               <MenubarMenu>
                 <MenubarTrigger
-                  className={accessToken ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:text-blue-500"}
+                  className={
+                    accessToken
+                      ? "opacity-50 cursor-not-allowed"
+                      : "cursor-pointer hover:text-blue-500"
+                  }
                   disabled={accessToken}
                 >
                   Views
@@ -88,7 +81,9 @@ const Navbar = () => {
               <MenubarMenu>
                 <MenubarTrigger
                   className={
-                    !accessToken ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:text-blue-500"
+                    !accessToken
+                      ? "opacity-50 cursor-not-allowed"
+                      : "cursor-pointer hover:text-blue-500"
                   }
                   disabled={!accessToken}
                   onClick={handleRemove}

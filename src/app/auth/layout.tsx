@@ -4,10 +4,18 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import NextImage from "next/image"; // Renamed to avoid conflict
 import LoadingComponent from "@/components/loader";
+import { cookies } from "next/headers";
+
+
+type AuthLayoutProps = {
+  children: React.ReactNode;
+  accessToken: boolean;
+};
 
 const imageUrl = "https://psl-s3-vercel-bucket.s3.us-east-2.amazonaws.com/promo.jpg";
 
-const AuthLayout = ({ children }: { children: React.ReactNode }) => {
+
+const AuthLayout = ({ children, accessToken }: AuthLayoutProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   // Preload image using DOM Image constructor
@@ -44,7 +52,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
 
       {/* Form Side */}
       <div className="w-full lg:w-1/2 flex flex-col h-full overflow-hidden">
-        <Navbar />
+      <Navbar accessToken={!!accessToken}/>
         <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-8">
           <div className="w-full mx-auto items-center justify-center flex flex-col">
             {children}
