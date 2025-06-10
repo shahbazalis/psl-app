@@ -37,6 +37,7 @@ export const PlayerRegistration = async (
   fileData: any
 ) => {
   const { email, name, phoneNumber, nationality, role, password } = props;
+  console.log("PlayerRegistration props:", props);
 
   const file = fileData.get("file");
   let newFileName = "";

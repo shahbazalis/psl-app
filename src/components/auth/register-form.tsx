@@ -78,6 +78,7 @@ const RegisterForm = () => {
       setShowDialog(true);
       await SendEmail(data);
     } else {
+      console.error("Registration failed:", response);
       setErrorMessage(response.message);
       setLoading(false);
     }
@@ -210,9 +211,14 @@ const RegisterForm = () => {
                           </SelectItem>
                           <SelectItem value="Bangladesh">Bangladesh</SelectItem>
                           <SelectItem value="India">India</SelectItem>
+                          <SelectItem value="Italy">Italy</SelectItem>
+                          <SelectItem value="Finland">Finland</SelectItem>
+                          <SelectItem value="Kenya">Kenya</SelectItem>
                           <SelectItem value="Nepal">Nepal</SelectItem>
                           <SelectItem value="Pakistan">Pakistan</SelectItem>
                           <SelectItem value="Srilanka">Srilanka</SelectItem>
+                          <SelectItem value="Sudan">Sudan</SelectItem>
+                          <SelectItem value="Vietnam">Vietnam</SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -241,10 +247,11 @@ const RegisterForm = () => {
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent position="popper">
-                          <SelectItem value="BATTER">Batter</SelectItem>
-                          <SelectItem value="BOWLER">Bowler</SelectItem>
-                          <SelectItem value="ALLROUNDER">
-                            All Rounder
+                          <SelectItem value="GOALKEEPER">Goal Keeper</SelectItem>
+                          <SelectItem value="DEFENDER">Defender</SelectItem>
+                          <SelectItem value="MIDFIELDER">Midfielder</SelectItem>
+                          <SelectItem value="ATTACKER">
+                            Attacker
                           </SelectItem>
                         </SelectContent>
                       </Select>
@@ -284,7 +291,7 @@ const RegisterForm = () => {
               )}
             />
           </div>
-          <Button disabled type="submit" className="w-full  bg-green-800">
+          <Button type="submit" className="w-full  bg-green-800">
             {loading ? "Loading..." : "Register"}
           </Button>
         </form>

@@ -20,13 +20,13 @@ const Register = () => {
   return (
     <>
       <RegisterForm />
-      <AlertDialogComponent
+      {/* <AlertDialogComponent
         showDialog={showDialog}
         onClose={handleRegistrationOver}
         title="Sorry!"
         description="Registration time period is over. Please try again next time."
         handleConfirmation={handleRegistrationOver}
-      />
+      /> */}
     </>
   );
 };
